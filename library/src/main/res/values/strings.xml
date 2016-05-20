@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">ListPlaceHolder</string>
+    <string name="txt_no_content">txt_no_content</string>
+    <string name="txt_retry">txt_retry</string>
+</resources>
