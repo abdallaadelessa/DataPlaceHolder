@@ -75,6 +75,7 @@ or in code you can use the following methods
     public void showDimProgress(String message, int progress)
     public void showDimProgress(int progress)
     public void showDimProgress()
+    public void dismissAll()
  
 ```
 
