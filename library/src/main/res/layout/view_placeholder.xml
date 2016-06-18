@@ -3,6 +3,7 @@
     xmlns:wheel="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/vgParentLayout"
     android:clickable="true"
     android:layout_gravity="center"
@@ -26,7 +27,7 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:padding="@dimen/spacing_8"
-            android:text="@string/txt_no_content"
+            tools:text="No Content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="?colorAccent"/>
         <Button
@@ -41,7 +42,7 @@
             android:paddingLeft="@dimen/spacing_12"
             android:paddingRight="@dimen/spacing_12"
             android:paddingTop="@dimen/spacing_5"
-            android:text="@string/txt_retry"
+            android:text="Retry"
             android:textAppearance="?android:textAppearanceSmall"
             android:textColor="@android:color/white"/>
     </LinearLayout>

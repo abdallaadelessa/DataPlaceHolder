@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="spacing_5">5dp</dimen>
+    <dimen name="spacing_8">8dp</dimen>
+    <dimen name="spacing_12">12dp</dimen>
+    <dimen name="spacing_80">80dp</dimen>
+    <dimen name="spacing_100">100dp</dimen>
+    <color name="colorDim">#80000000</color>
+    <declare-styleable name="app">
+        <attr name="dimModeColor" format="reference|color" />
+        <attr name="messageTextColor" format="reference|color" />
+        <attr name="progressBarColor" format="reference|color" />
+        <attr name="actionButtonBgColor" format="reference|color" />
+        <attr name="actionButtonTextColor" format="reference|color" />
+        <attr name="showMessage" format="reference|string" />
+        <attr name="showStateImage" format="reference" />
+        <attr name="showProgress" format="reference|boolean" />
+        <attr name="showDimProgress" format="reference|boolean" />
+    </declare-styleable>
+</resources>

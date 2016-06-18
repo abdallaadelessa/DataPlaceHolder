@@ -1,4 +1,4 @@
-package com.abdallaadelessa.android.listplaceholder;
+package com.abdallaadelessa.android.placeholder;
 
 import org.junit.Test;
 
