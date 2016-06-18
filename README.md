@@ -3,7 +3,7 @@ DataPlaceholder Library which handles the 4 states of retrieving any data (Loadi
 # Screenshots
 
 ![alt tag](https://github.com/abdallaadelessa/DataPlaceHolder/blob/master/screenshots/screenshot.gif)
-![alt tag](https://github.com/abdallaadelessa/DataPlaceHolder/blob/master/screenshots/screenshot2.png=428x256)
+![alt tag](https://github.com/abdallaadelessa/DataPlaceHolder/blob/master/screenshots/screenshot2.png)
 
 # Usage
 You can create your own data place holder in xml like this (remeber to add ```xmlns:app="http://schemas.android.com/apk/res-auto"```):
