@@ -1,5 +1,7 @@
 apply plugin: 'com.android.library'
-
+Properties properties = new Properties()
+properties.load(project.rootProject.file('gradle.properties').newDataInputStream())
+def PROJECT_VERSION_NAME = properties.getProperty("PROJECT_VERSION_NAME")
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.3"
@@ -8,7 +10,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 23
         versionCode 1
-        versionName "1.0"
+        versionName PROJECT_VERSION_NAME
     }
     buildTypes {
         release {
@@ -17,10 +19,14 @@ android {
         }
     }
 }
-
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.3.0'
-    compile 'com.pnikosis:materialish-progress:1.7'
 }
+apply from: 'bintray-maven.gradle'

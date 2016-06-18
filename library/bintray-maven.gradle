@@ -1,0 +1,89 @@
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
+//------------------------------>
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('gradle.properties').newDataInputStream())
+def PROJECT_GROUP_ID = properties.getProperty("PROJECT_GROUP_ID")
+def PROJECT_VERSION_NAME = properties.getProperty("PROJECT_VERSION_NAME")
+def PROJECT_SITE_URL = properties.getProperty("PROJECT_SITE_URL")
+def PROJECT_GIT_URL = properties.getProperty("PROJECT_GIT_URL")
+def PROJECT_ISSUE_TRACKER_URL = properties.getProperty("PROJECT_ISSUE_TRACKER_URL")
+//-->
+def POM_PROJECT_NAME = properties.getProperty("POM_PROJECT_NAME")
+def POM_PROJECT_PACKAGING = properties.getProperty("POM_PROJECT_PACKAGING")
+def POM_PROJECT_DEVELOPER_ID = properties.getProperty("POM_PROJECT_DEVELOPER_ID")
+def POM_PROJECT_DEVELOPER_NAME = properties.getProperty("POM_PROJECT_DEVELOPER_NAME")
+def POM_PROJECT_DEVELOPER_EMAIL = properties.getProperty("POM_PROJECT_DEVELOPER_EMAIL")
+def POM_PROJECT_LICENSE_NAME = properties.getProperty("POM_PROJECT_LICENSE_NAME")
+def POM_PROJECT_LICENSE_URL = properties.getProperty("POM_PROJECT_LICENSE_URL")
+//-->
+def BINTRAY_USER = properties.getProperty("BINTRAY_USER")
+def BINTRAY_API_KEY = properties.getProperty("BINTRAY_API_KEY")
+def BINTRAY_NAME = properties.getProperty("BINTRAY_NAME")
+def BINTRAY_DESC = properties.getProperty("BINTRAY_DESC")
+//------------------------------>
+
+bintray {
+    user = BINTRAY_USER
+    key = BINTRAY_API_KEY
+    configurations = ['archives']
+    pkg {
+        repo = "maven"
+        name = BINTRAY_NAME
+        desc = BINTRAY_DESC
+        websiteUrl = PROJECT_SITE_URL
+        vcsUrl = PROJECT_GIT_URL
+        issueTrackerUrl = PROJECT_ISSUE_TRACKER_URL
+        licenses = ["Apache-2.0"]
+        labels = ['android']
+        publish = true
+        publicDownloadNumbers = true
+    }
+}
+
+//------------------------------>
+
+group = PROJECT_GROUP_ID
+version = PROJECT_VERSION_NAME
+
+install {
+    repositories.mavenInstaller {
+        pom {
+            project {
+                name POM_PROJECT_NAME
+                url PROJECT_SITE_URL
+                packaging POM_PROJECT_PACKAGING
+                groupId PROJECT_GROUP_ID
+                licenses {
+                    license {
+                        name POM_PROJECT_LICENSE_NAME
+                        url POM_PROJECT_LICENSE_URL
+                    }
+                }
+                developers {
+                    developer {
+                        id POM_PROJECT_DEVELOPER_ID
+                        name POM_PROJECT_DEVELOPER_NAME
+                        email POM_PROJECT_DEVELOPER_EMAIL
+                    }
+                }
+                scm {
+                    connection PROJECT_SITE_URL
+                    developerConnection PROJECT_SITE_URL
+                    url PROJECT_SITE_URL
+                }
+            }
+        }
+    }
+}
+
+//------------------------------>
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+artifacts {
+    archives sourcesJar
+}
