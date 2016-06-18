@@ -7,14 +7,14 @@
     <dimen name="spacing_100">100dp</dimen>
     <color name="colorDim">#80000000</color>
     <declare-styleable name="app">
-        <attr name="dimModeColor" format="reference|color" />
-        <attr name="messageTextColor" format="reference|color" />
-        <attr name="progressBarColor" format="reference|color" />
-        <attr name="actionButtonBgColor" format="reference|color" />
-        <attr name="actionButtonTextColor" format="reference|color" />
-        <attr name="showMessage" format="reference|string" />
+        <attr name="dimModeColor" format="color" />
+        <attr name="messageTextColor" format="color" />
+        <attr name="progressBarColor" format="color" />
+        <attr name="actionButtonBgColor" format="color" />
+        <attr name="actionButtonTextColor" format="color" />
+        <attr name="showMessage" format="string" />
         <attr name="showStateImage" format="reference" />
-        <attr name="showProgress" format="reference|boolean" />
-        <attr name="showDimProgress" format="reference|boolean" />
+        <attr name="showProgress" format="boolean" />
+        <attr name="showDimProgress" format="boolean" />
     </declare-styleable>
 </resources>

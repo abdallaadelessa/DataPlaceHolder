@@ -227,14 +227,14 @@ public class DataPlaceHolder extends FrameLayout {
         } else {
             a = context.obtainStyledAttributes(attrs, R.styleable.app);
         }
-        int dimModeColor = getColor(context, a, R.styleable.app_dimModeColor);
-        int messageTextColor = getColor(context, a, R.styleable.app_messageTextColor);
-        int progressBarColor = getColor(context, a, R.styleable.app_progressBarColor);
-        int actionButtonBgColor = getColor(context, a, R.styleable.app_actionButtonBgColor);
-        int actionButtonTextColor = getColor(context, a, R.styleable.app_actionButtonTextColor);
-        String messageText = getString(context, a, R.styleable.app_showMessage);
-        boolean showProgress = getBoolean(context, a, R.styleable.app_showProgress);
-        boolean showDimProgress = getBoolean(context, a, R.styleable.app_showDimProgress);
+        int dimModeColor = getColor(a, R.styleable.app_dimModeColor);
+        int messageTextColor = getColor(a, R.styleable.app_messageTextColor);
+        int progressBarColor = getColor(a, R.styleable.app_progressBarColor);
+        int actionButtonBgColor = getColor(a, R.styleable.app_actionButtonBgColor);
+        int actionButtonTextColor = getColor(a, R.styleable.app_actionButtonTextColor);
+        String messageText = getString(a, R.styleable.app_showMessage);
+        boolean showProgress = getBoolean(a, R.styleable.app_showProgress);
+        boolean showDimProgress = getBoolean(a, R.styleable.app_showDimProgress);
         int stateImageResId = a.getResourceId(R.styleable.app_showStateImage, -1);
         // Set Props
         if (dimModeColor != -1) mDimModeColor = dimModeColor;
@@ -251,40 +251,18 @@ public class DataPlaceHolder extends FrameLayout {
         a.recycle();
     }
 
-    private int getColor(Context context, TypedArray a, int index) {
-        int colorResId = a.getResourceId(index, -1);
+    private int getColor(TypedArray a, int index) {
         int color = a.getColor(index, -1);
-        if (colorResId != -1) {
-            return ContextCompat.getColor(context, colorResId);
-        } else if (color != -1) {
-            return color;
-        } else {
-            return -1;
-        }
+        return color != -1 ? color : -1;
     }
 
-    private boolean getBoolean(Context context, TypedArray a, int index) {
-        int boolResId = a.getResourceId(index, -1);
-        boolean bool = a.getBoolean(index, false);
-        if (boolResId != -1) {
-            return context.getResources().getBoolean(boolResId);
-        } else if (bool) {
-            return bool;
-        } else {
-            return false;
-        }
+    private boolean getBoolean(TypedArray a, int index) {
+        return a.getBoolean(index, false);
     }
 
-    private String getString(Context context, TypedArray a, int index) {
-        int txtResId = a.getResourceId(index, -1);
+    private String getString(TypedArray a, int index) {
         String txt = a.getString(index);
-        if (txtResId != -1) {
-            return context.getString(txtResId);
-        } else if (txt != null) {
-            return txt;
-        } else {
-            return null;
-        }
+        return txt != null ? txt : null;
     }
 
 }
