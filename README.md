@@ -48,13 +48,13 @@ or in code you can use the following methods
     /**
      * The Main Component Method
      * @param message         Text to show
-     * @param progress        if progress is -1 progress will be hidden
-     *                        if progress is 0 Indeterminate progress will be shown
-     *                        if progress greater than 0 determinate progress will be shown using the given progress
-     * @param dimProgress     if true a dim background will be shown over the content behind the component views
+     * @param progress        if -1 progress will be hidden
+     *                        if 0 Indeterminate progress will be shown
+     *                        if greater than 0 determinate progress will be shown using the given progress
+     * @param dimProgress     if true a dim background will be shown over the content and behind the component views
      * @param stateImageResId state image resource id to be shown if -1 no image will be shown
      * @param actionText      action text for the button which is below the message text view if -1 the default text will be used
-     * @param action          the runnable action which would be executed when the action button is clicked
+     * @param action          the runnable action which would be executed when the action button is clicked if null no action will be executed
      */
     public void showMessage(String message, int progress, boolean dimProgress, int stateImageResId, final String actionText, final Runnable action)
     public void showMessage(int messageResId, int progress, boolean dimProgress, int stateImageResId, final int actionTextResId, final Runnable action)

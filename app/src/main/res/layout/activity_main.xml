@@ -8,6 +8,7 @@
     tools:context=".MainActivity">
 
     <LinearLayout
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -37,6 +38,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -58,6 +60,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -77,8 +80,9 @@
         android:layout_height="match_parent"
         app:messageTextColor="@color/colorPrimary"
         app:progressBarColor="@color/colorPrimary"
-        app:showMessage="No Content"
-        app:showStateImage="@drawable/navigation_error"
+        app:showMessage="Loading..."
+        app:showProgress="0"
+        app:showStateImage="@drawable/test"
         app:stateImageHeight="200dp"
         app:stateImageWidth="200dp">
 

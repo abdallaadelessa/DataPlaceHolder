@@ -36,6 +36,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        dataPlaceHolder.showMessage("Message", 0, false, R.drawable.navigation_error, "Action Button", new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        });
     }
 
     @OnClick({R.id.btnError, R.id.btnSuccess, R.id.btnEmpty, R.id.btnInDeterminateLoading, R.id.btnDeterminateLoading, R.id.btnDimProgress})
