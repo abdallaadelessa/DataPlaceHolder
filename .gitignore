@@ -34,3 +34,4 @@ proguard/
 
 .DS_Store
 /build
+/gradle.properties
