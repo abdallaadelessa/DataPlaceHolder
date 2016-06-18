@@ -7,7 +7,7 @@
     tools:context=".MainActivity">
 
     <com.abdallaadelessa.android.dataplaceholder.DataPlaceHolder
-        android:id="@+id/listplaceholder"
+        android:id="@+id/dataplaceholder"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
