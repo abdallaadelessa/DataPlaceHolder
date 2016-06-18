@@ -22,6 +22,25 @@ You can create your own data place holder in xml like this (remeber to add ```xm
          <!-- here you can put your list , recycler view or any other content -->
     </com.abdallaadelessa.android.dataplaceholder.DataPlaceHolder>
 ```
+Attrs
+
+```xml
+
+        <attr name="dimModeColor" format="color" />
+        <attr name="messageTextColor" format="color" />
+        <attr name="progressBarColor" format="color" />
+        <attr name="actionButtonBgColor" format="color" />
+        <attr name="actionButtonTextColor" format="color" />
+        <attr name="showMessage" format="string" />
+        <attr name="stateImageWidth" format="dimension" />
+        <attr name="stateImageHeight" format="dimension" />
+        <attr name="progressSize" format="dimension" />
+        <attr name="showStateImage" format="reference" />
+        <attr name="showProgress" format="integer" />
+        <attr name="showDimProgress" format="integer" />
+
+```
+
 or in code you can use the following methods
 
 ```Java
