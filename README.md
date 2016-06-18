@@ -27,6 +27,7 @@ or in code you can use the following methods
 ```Java
 
     /**
+     * The Main Component Method
      * @param message         Text to show
      * @param progress        if progress is -1 progress will be hidden
      *                        if progress is 0 Indeterminate progress will be shown
@@ -36,16 +37,26 @@ or in code you can use the following methods
      * @param actionText      action text for the button which is below the message text view if -1 the default text will be used
      * @param action          the runnable action which would be executed when the action button is clicked
      */
-public void showMessage(String message, int progress, boolean dimProgress, int stateImageResId, final String actionText, final Runnable action);
-
-public void showStateImage(int stateImageResId, final String actionText, final Runnable action);
-
-public void showActionButton(final String actionText, final Runnable action);
-
-public void showProgress(String message, int progress)
-
- public void showDimProgress(String message, int progress)
+    public void showMessage(String message, int progress, boolean dimProgress, int stateImageResId, final String actionText, final Runnable action)
+    public void showMessage(int messageResId, int progress, boolean dimProgress, int stateImageResId, final int actionTextResId, final Runnable action)
+    public void showMessage(String message, int stateImageResId, final String actionText, final Runnable action)
+    public void showMessage(String message, int stateImageResId, final Runnable action)
+    public void showMessage(String message, final Runnable action) 
+    public void showMessage(String message, int stateImageResId)
+    public void showMessage(String message, int progress, int stateImageResId)
+    public void showMessage(String message)
+    public void showStateImage(int stateImageResId, final String actionText, final Runnable action)
+    public void showStateImage(int stateImageResId, final Runnable action)
+    public void showStateImage(int stateImageResId) 
+    public void showActionButton(final String actionText, final Runnable action) 
+    public void showActionButton(final Runnable action)
+    public void showProgress(String message, int progress)
+    public void showProgress(int progress)
+    public void showProgress()
+    public void showDimProgress(String message, int progress)
+    public void showDimProgress(int progress)
+    public void showDimProgress()
  
-...
+```
 
 # Gradle 
