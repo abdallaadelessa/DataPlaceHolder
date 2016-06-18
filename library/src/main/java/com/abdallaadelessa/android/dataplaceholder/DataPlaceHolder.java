@@ -1,4 +1,4 @@
-package com.abdallaadelessa.android.placeholder;
+package com.abdallaadelessa.android.dataplaceholder;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -17,7 +17,7 @@ import com.pnikosis.materialishprogress.ProgressWheel;
 /**
  * Created by abdalla on 29/07/15.
  */
-public class PlaceHolder extends FrameLayout {
+public class DataPlaceHolder extends FrameLayout {
     private static final String TAG_PLACE_HOLDER = "PlaceHolder";
     private View vgParentLayout;
     private ImageView ivState;
@@ -27,18 +27,18 @@ public class PlaceHolder extends FrameLayout {
     private int mDimModeColor;
     private boolean mHideContent;
 
-    public PlaceHolder(Context context) {
+    public DataPlaceHolder(Context context) {
         super(context);
         initUI(context);
     }
 
-    public PlaceHolder(Context context, AttributeSet attrs) {
+    public DataPlaceHolder(Context context, AttributeSet attrs) {
         super(context, attrs);
         initUI(context);
         readAttributeSet(context, attrs, -1);
     }
 
-    public PlaceHolder(Context context, AttributeSet attrs, int defStyle) {
+    public DataPlaceHolder(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         initUI(context);
         readAttributeSet(context, attrs, defStyle);
@@ -58,7 +58,7 @@ public class PlaceHolder extends FrameLayout {
 
     private void initUI(Context cxt) {
         try {
-            View view = inflate(cxt, R.layout.view_placeholder, this);
+            View view = inflate(cxt, R.layout.view_dataplaceholder, this);
             vgParentLayout = view.findViewById(R.id.vgParentLayout);
             ivState = (ImageView) view.findViewById(R.id.imgState);
             tvMessage = (TextView) view.findViewById(R.id.tvMessage);
