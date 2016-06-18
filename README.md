@@ -80,3 +80,14 @@ or in code you can use the following methods
 ```
 
 # Gradle 
+```xml
+
+repositories { 
+    maven { url 'https://dl.bintray.com/abdalla-essa92/maven' }
+}
+
+dependencies {
+    compile 'com.abdallaadelessa.android.dataplaceholder:library:1.0.0@aar'
+}
+
+```
