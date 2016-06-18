@@ -1,31 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnError"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Error" />
+
+        <Button
+            android:id="@+id/btnSuccess"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Success" />
+
+        <Button
+            android:id="@+id/btnEmpty"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Empty" />
+        <Button
+            android:id="@+id/btnDimProgress"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dim Progress" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnInDeterminateLoading"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="indeterminate Loading" />
+
+        <Button
+            android:id="@+id/btnDeterminateLoading"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="determinate Loading" />
+    </LinearLayout>
 
     <com.abdallaadelessa.android.dataplaceholder.DataPlaceHolder
         android:id="@+id/dataplaceholder"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerInParent="true"
         app:messageTextColor="@color/colorPrimary"
         app:progressBarColor="@color/colorPrimary"
+        app:showMessage="No Content"
         app:showStateImage="@drawable/navigation_error"
-        app:stateImageWidth="200dp"
         app:stateImageHeight="200dp"
-        app:showMessage="Loading..."
-        app:showProgress="0">
+        app:stateImageWidth="200dp">
+
         <TextView
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Large Text"
+            android:text="My Data"
             android:textAppearance="?android:attr/textAppearanceLarge" />
     </com.abdallaadelessa.android.dataplaceholder.DataPlaceHolder>
 
 
-</RelativeLayout>
+</LinearLayout>

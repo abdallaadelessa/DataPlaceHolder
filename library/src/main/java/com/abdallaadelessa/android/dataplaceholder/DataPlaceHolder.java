@@ -106,6 +106,8 @@ public class DataPlaceHolder extends FrameLayout {
         a.recycle();
     }
 
+    // -------------------------> Helpers
+
     private void dimParentBackground() {
         vgParentLayout.setClickable(true);
         vgParentLayout.setBackgroundColor(mDimModeColor);
@@ -180,6 +182,10 @@ public class DataPlaceHolder extends FrameLayout {
         }
     }
 
+    public void showMessage(String message, int stateImageResId, final int actionTextResId, final Runnable action) {
+        showMessage(message, -1, stateImageResId, actionTextResId, action);
+    }
+
     public void showMessage(String message, int stateImageResId, final Runnable action) {
         showMessage(message, -1, stateImageResId, -1, action);
     }
@@ -221,20 +227,20 @@ public class DataPlaceHolder extends FrameLayout {
     }
 
     public void showProgress() {
-        showMessage(null, 0, -1, -1, null);
+        showProgress(0);
     }
 
     public void showProgress(int progress) {
-        showMessage(null,progress, -1, -1, null);
+        showMessage(null, progress, -1, -1, null);
     }
 
     public void showDimProgress() {
-        showProgress();
-        dimParentBackground();
+        showDimProgress(0);
     }
 
     public void showDimProgress(int progress) {
         showProgress(progress);
+        hideContent(false);
         dimParentBackground();
     }
 
