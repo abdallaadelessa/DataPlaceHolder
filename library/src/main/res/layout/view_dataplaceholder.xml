@@ -19,7 +19,18 @@
             android:id="@+id/imgState"
             android:layout_width="@dimen/spacing_100"
             android:layout_height="@dimen/spacing_100"
+            android:padding="@dimen/spacing_8"
             android:src="@drawable/navigation_error"/>
+
+        <com.pnikosis.materialishprogress.ProgressWheel
+            android:id="@+id/pbProgress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/spacing_8"
+            android:layout_gravity="center"
+            wheel:matProg_progressIndeterminate="true"
+            />
+
         <TextView
             android:id="@+id/tvMessage"
             android:layout_width="wrap_content"
@@ -47,11 +58,4 @@
             android:textColor="@android:color/white"/>
     </LinearLayout>
 
-    <com.pnikosis.materialishprogress.ProgressWheel
-        android:id="@+id/pbProgress"
-        android:layout_width="@dimen/spacing_80"
-        android:layout_height="@dimen/spacing_80"
-        android:layout_gravity="center"
-        wheel:matProg_progressIndeterminate="true"
-        />
 </FrameLayout>

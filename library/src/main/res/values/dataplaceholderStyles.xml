@@ -13,8 +13,11 @@
         <attr name="actionButtonBgColor" format="color" />
         <attr name="actionButtonTextColor" format="color" />
         <attr name="showMessage" format="string" />
+        <attr name="stateImageWidth" format="dimension" />
+        <attr name="stateImageHeight" format="dimension" />
+        <attr name="progressSize" format="dimension" />
         <attr name="showStateImage" format="reference" />
-        <attr name="showProgress" format="boolean" />
-        <attr name="showDimProgress" format="boolean" />
+        <attr name="showProgress" format="integer" />
+        <attr name="showDimProgress" format="integer" />
     </declare-styleable>
 </resources>
