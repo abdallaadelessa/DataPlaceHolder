@@ -145,8 +145,18 @@ public class DataPlaceHolder extends FrameLayout {
         hideDataPlaceHolderViews();
     }
 
-    public void showMessage(String message, int progress, int stateImageResId, final int actionTextResId, final Runnable action) {
-        if (message != null || progress != -1 || stateImageResId != -1 || actionTextResId != -1 || action != null) {
+    /**
+     * @param message         Text to show
+     * @param progress        if progress is -1 progress will be hidden
+     *                        if progress is 0 Indeterminate progress will be shown
+     *                        if progress greater than 0 determinate progress will be shown using the given progress
+     * @param dimProgress     if true a dim background will be shown over the content behind the component views
+     * @param stateImageResId state image resource id to be shown if -1 no image will be shown
+     * @param actionText      action text for the button which is below the message text view if -1 the default text will be used
+     * @param action          the runnable action which would be executed when the action button is clicked
+     */
+    public void showMessage(String message, int progress, boolean dimProgress, int stateImageResId, final String actionText, final Runnable action) {
+        if (message != null || progress != -1 || stateImageResId != -1 || actionText != null || action != null) {
             dismissAllWithContent();
             if (progress != -1) {
                 pbProgress.setVisibility(VISIBLE);
@@ -158,15 +168,20 @@ public class DataPlaceHolder extends FrameLayout {
                     float instantProgress = ((float) progress) / 100.0f;
                     pbProgress.setInstantProgress(instantProgress);
                 }
+                if (dimProgress) {
+                    dimParentBackground();
+                } else {
+                    clearParentLayoutBackground();
+                }
             }
             if (message != null) {
-                tvMessage.setText(message);
                 tvMessage.setVisibility(View.VISIBLE);
+                tvMessage.setText(message);
             }
             if (action != null) {
                 btnAction.setVisibility(View.VISIBLE);
-                if (actionTextResId > 0) {
-                    btnAction.setText(actionTextResId);
+                if (actionText != null) {
+                    btnAction.setText(actionText);
                 }
                 btnAction.setOnClickListener(new OnClickListener() {
                     @Override
@@ -182,66 +197,79 @@ public class DataPlaceHolder extends FrameLayout {
         }
     }
 
-    public void showMessage(String message, int stateImageResId, final int actionTextResId, final Runnable action) {
-        showMessage(message, -1, stateImageResId, actionTextResId, action);
+    public void showMessage(int messageResId, int progress, boolean dimProgress, int stateImageResId, final int actionTextResId, final Runnable action) {
+        String message = messageResId != -1 ? getResources().getString(messageResId) : null;
+        String actionText = actionTextResId != -1 ? getResources().getString(actionTextResId) : null;
+        showMessage(message, progress, dimProgress, stateImageResId, actionText, action);
+    }
+
+    public void showMessage(String message, int stateImageResId, final String actionText, final Runnable action) {
+        showMessage(message, -1, false, stateImageResId, actionText, action);
     }
 
     public void showMessage(String message, int stateImageResId, final Runnable action) {
-        showMessage(message, -1, stateImageResId, -1, action);
+        showMessage(message, -1, false, stateImageResId, null, action);
     }
 
     public void showMessage(String message, final Runnable action) {
-        showMessage(message, -1, -1, -1, action);
+        showMessage(message, -1, false, -1, null, action);
     }
 
     public void showMessage(String message, int stateImageResId) {
-        showMessage(message, -1, stateImageResId, -1, null);
+        showMessage(message, -1, false, stateImageResId, null, null);
     }
 
     public void showMessage(String message, int progress, int stateImageResId) {
-        showMessage(message, progress, stateImageResId, -1, null);
+        showMessage(message, progress, false, stateImageResId, null, null);
     }
 
     public void showMessage(String message) {
-        showMessage(message, -1, -1, -1, null);
+        showMessage(message, -1, false, -1, null, null);
     }
 
-    public void showStateImage(int stateImageResId, final int actionTextResId, final Runnable action) {
-        showMessage(null, -1, stateImageResId, actionTextResId, action);
+    public void showStateImage(int stateImageResId, final String actionText, final Runnable action) {
+        showMessage(null, -1, false, stateImageResId, actionText, action);
     }
 
     public void showStateImage(int stateImageResId, final Runnable action) {
-        showMessage(null, -1, stateImageResId, -1, action);
+        showMessage(null, -1, false, stateImageResId, null, action);
     }
 
     public void showStateImage(int stateImageResId) {
-        showMessage(null, -1, stateImageResId, -1, null);
+        showMessage(null, -1, false, stateImageResId, null, null);
     }
 
-    public void showActionButton(final int actionTextResId, final Runnable action) {
-        showMessage(null, -1, -1, actionTextResId, action);
+    public void showActionButton(final String actionText, final Runnable action) {
+        showMessage(null, -1, false, -1, actionText, action);
     }
 
     public void showActionButton(final Runnable action) {
-        showMessage(null, -1, -1, -1, action);
+        showMessage(null, -1, false, -1, null, action);
     }
 
-    public void showProgress() {
-        showProgress(0);
+    public void showProgress(String message, int progress) {
+        showMessage(message, progress, false, -1, null, null);
     }
 
     public void showProgress(int progress) {
-        showMessage(null, progress, -1, -1, null);
+        showProgress(null, progress);
     }
 
-    public void showDimProgress() {
-        showDimProgress(0);
+    public void showProgress() {
+        showProgress(null, 0);
+    }
+
+    public void showDimProgress(String message, int progress) {
+        showMessage(message, progress, true, -1, null, null);
+        hideContent(false);
     }
 
     public void showDimProgress(int progress) {
-        showProgress(progress);
-        hideContent(false);
-        dimParentBackground();
+        showDimProgress(null, progress);
+    }
+
+    public void showDimProgress() {
+        showDimProgress(null, 0);
     }
 
     // -------------------------> Components Getters
