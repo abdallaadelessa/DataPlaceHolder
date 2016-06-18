@@ -12,7 +12,6 @@ public class MainActivity extends AppCompatActivity {
     private final Handler handler = new Handler();
     private DataPlaceHolder dataPlaceHolder;
     private Thread thread;
-    private boolean isRunning = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
                                 handler.post(new Runnable() {
                                     @Override
                                     public void run() {
-                                        dataPlaceHolder.showProgress(progress);
+                                        dataPlaceHolder.showMessage(progress+"% Loading...",progress,-1);
                                     }
                                 });
                                 try {
