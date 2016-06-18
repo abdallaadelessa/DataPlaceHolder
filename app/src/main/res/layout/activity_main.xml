@@ -16,7 +16,7 @@
         app:showStateImage="@drawable/navigation_error"
         app:stateImageWidth="200dp"
         app:stateImageHeight="200dp"
-        app:showMessage="Loading... 20%"
+        app:showMessage="Loading..."
         app:showProgress="0">
         <TextView
             android:id="@+id/textView"
