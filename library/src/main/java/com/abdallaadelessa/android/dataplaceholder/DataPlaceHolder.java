@@ -7,15 +7,15 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
 /**
  * Created by abdalla on 29/07/15.
  */
-public class DataPlaceHolder extends FrameLayout {
+public class DataPlaceHolder extends RelativeLayout {
     private static final String TAG_PLACE_HOLDER = "PlaceHolder";
     private View vgParentLayout;
     private ImageView ivState;
@@ -47,6 +47,7 @@ public class DataPlaceHolder extends FrameLayout {
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
         hideContent(mHideContent);
+        if(vgParentLayout != null) bringChildToFront(vgParentLayout);
     }
 
     private static void logError(Exception e) {
