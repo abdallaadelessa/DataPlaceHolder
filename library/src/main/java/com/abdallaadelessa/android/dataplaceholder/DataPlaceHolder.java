@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
-
 /**
  * Created by abdalla on 29/07/15.
  */
@@ -66,43 +65,51 @@ public class DataPlaceHolder extends FrameLayout {
             pbProgress = (ProgressWheel) view.findViewById(R.id.pbProgress);
             setDimColor(ContextCompat.getColor(cxt, R.color.colorDim));
             dismissAll();
-        } catch (Exception e) {
+        }
+        catch(Exception e) {
             logError(e);
         }
     }
 
     private void readAttributeSet(Context context, AttributeSet attrs, int defStyle) {
-        TypedArray a;
-        if (defStyle != -1) {
-            a = context.obtainStyledAttributes(attrs, R.styleable.app, defStyle, 0);
-        } else {
-            a = context.obtainStyledAttributes(attrs, R.styleable.app);
+        try {
+            TypedArray a;
+            if(defStyle != -1) {
+                a = context.obtainStyledAttributes(attrs, R.styleable.app, defStyle, 0);
+            }
+            else {
+                a = context.obtainStyledAttributes(attrs, R.styleable.app);
+            }
+            int dimModeColor = a.getColor(R.styleable.app_dimModeColor, -1);
+            int messageTextColor = a.getColor(R.styleable.app_messageTextColor, -1);
+            int progressBarColor = a.getColor(R.styleable.app_progressBarColor, -1);
+            int actionButtonBgColor = a.getColor(R.styleable.app_actionButtonBgColor, -1);
+            int actionButtonTextColor = a.getColor(R.styleable.app_actionButtonTextColor, -1);
+            String messageText = a.getString(R.styleable.app_showMessage);
+            int progress = a.getInt(R.styleable.app_showProgress, -1);
+            int dimProgress = a.getInt(R.styleable.app_showDimProgress, -1);
+            int stateImageResId = a.getResourceId(R.styleable.app_showStateImage, -1);
+            int stateImageWidth = (int) a.getDimension(R.styleable.app_stateImageWidth, -1);
+            int stateImageHeight = (int) a.getDimension(R.styleable.app_stateImageHeight, -1);
+            int progressSize = (int) a.getDimension(R.styleable.app_progressSize, -1);
+            // Set Props
+            if(dimModeColor != -1) setDimColor(dimModeColor);
+            if(messageTextColor != -1) setMessageTextColor(messageTextColor);
+            if(progressBarColor != -1) setProgressWheelColor(progressBarColor);
+            if(actionButtonBgColor != -1) setActionButtonBackgroundColor(actionButtonBgColor);
+            if(actionButtonTextColor != -1) setActionButtonTextColor(actionButtonTextColor);
+            if(stateImageWidth != -1) getStateImageView().getLayoutParams().width = stateImageWidth;
+            if(stateImageHeight != -1)
+                getStateImageView().getLayoutParams().height = stateImageHeight;
+            if(progressSize != -1) getProgressWheel().setCircleRadius(progressSize);
+            showMessage(messageText, progress, stateImageResId);
+            if(dimProgress != -1) showDimProgress(dimProgress);
+            // Recycle
+            a.recycle();
         }
-        int dimModeColor = a.getColor(R.styleable.app_dimModeColor, -1);
-        int messageTextColor = a.getColor(R.styleable.app_messageTextColor, -1);
-        int progressBarColor = a.getColor(R.styleable.app_progressBarColor, -1);
-        int actionButtonBgColor = a.getColor(R.styleable.app_actionButtonBgColor, -1);
-        int actionButtonTextColor = a.getColor(R.styleable.app_actionButtonTextColor, -1);
-        String messageText = a.getString(R.styleable.app_showMessage);
-        int progress = a.getInt(R.styleable.app_showProgress, -1);
-        int dimProgress = a.getInt(R.styleable.app_showDimProgress, -1);
-        int stateImageResId = a.getResourceId(R.styleable.app_showStateImage, -1);
-        int stateImageWidth = (int) a.getDimension(R.styleable.app_stateImageWidth, -1);
-        int stateImageHeight = (int) a.getDimension(R.styleable.app_stateImageHeight, -1);
-        int progressSize = (int) a.getDimension(R.styleable.app_progressSize, -1);
-        // Set Props
-        if (dimModeColor != -1) setDimColor(dimModeColor);
-        if (messageTextColor != -1) setMessageTextColor(messageTextColor);
-        if (progressBarColor != -1) setProgressWheelColor(progressBarColor);
-        if (actionButtonBgColor != -1) setActionButtonBackgroundColor(actionButtonBgColor);
-        if (actionButtonTextColor != -1) setActionButtonTextColor(actionButtonTextColor);
-        if (stateImageWidth != -1) getStateImageView().getLayoutParams().width = stateImageWidth;
-        if (stateImageHeight != -1) getStateImageView().getLayoutParams().height = stateImageHeight;
-        if (progressSize != -1) getProgressWheel().setCircleRadius(progressSize);
-        showMessage(messageText, progress, stateImageResId);
-        if (dimProgress != -1) showDimProgress(dimProgress);
-        // Recycle
-        a.recycle();
+        catch(Exception e) {
+            logError(e);
+        }
     }
 
     // -------------------------> Helpers
@@ -119,7 +126,7 @@ public class DataPlaceHolder extends FrameLayout {
 
     private void hideContent(boolean hide) {
         mHideContent = hide;
-        for (int i = 1; i < getChildCount(); i++) {
+        for(int i = 0; i < getChildCount() - 1; i++) {
             getChildAt(i).setVisibility(hide ? GONE : VISIBLE);
         }
     }
@@ -155,31 +162,33 @@ public class DataPlaceHolder extends FrameLayout {
      * @param action          the runnable action which would be executed when the action button is clicked if null no action will be executed
      */
     public void showMessage(String message, int progress, boolean dimProgress, int stateImageResId, final String actionText, final Runnable action) {
-        if (message != null || progress != -1 || stateImageResId != -1 || actionText != null || action != null) {
+        if(message != null || progress != -1 || stateImageResId != -1 || actionText != null || action != null) {
             dismissAllWithContent();
-            if (progress != -1) {
+            if(progress != -1) {
                 pbProgress.setVisibility(VISIBLE);
-                if (progress == 0) {
+                if(progress == 0) {
                     //Indeterminate
                     pbProgress.spin();
-                } else {
+                }
+                else {
                     //Determinate
                     float instantProgress = ((float) progress) / 100.0f;
                     pbProgress.setInstantProgress(instantProgress);
                 }
-                if (dimProgress) {
+                if(dimProgress) {
                     dimParentBackground();
-                } else {
+                }
+                else {
                     clearParentLayoutBackground();
                 }
             }
-            if (message != null) {
+            if(message != null) {
                 tvMessage.setVisibility(View.VISIBLE);
                 tvMessage.setText(message);
             }
-            if (action != null) {
+            if(action != null) {
                 btnAction.setVisibility(View.VISIBLE);
-                if (actionText != null) {
+                if(actionText != null) {
                     btnAction.setText(actionText);
                 }
                 btnAction.setOnClickListener(new OnClickListener() {
@@ -189,7 +198,7 @@ public class DataPlaceHolder extends FrameLayout {
                     }
                 });
             }
-            if (stateImageResId > 0) {
+            if(stateImageResId > 0) {
                 ivState.setVisibility(View.VISIBLE);
                 ivState.setImageResource(stateImageResId);
             }
