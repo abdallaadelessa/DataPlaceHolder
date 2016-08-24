@@ -216,6 +216,10 @@ public class DataPlaceHolder extends RelativeLayout {
         showMessage(message, -1, false, stateImageResId, actionText, action);
     }
 
+    public void showMessage(String message, final String actionText, final Runnable action) {
+        showMessage(message, -1, false, -1, actionText, action);
+    }
+
     public void showMessage(String message, int stateImageResId, final Runnable action) {
         showMessage(message, -1, false, stateImageResId, null, action);
     }
