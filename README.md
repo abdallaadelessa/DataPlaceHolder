@@ -88,7 +88,7 @@ repositories {
 }
 
 dependencies {
-    compile 'com.abdallaadelessa.android.dataplaceholder:library:1.1.0@aar'
+    compile 'com.abdallaadelessa.android.dataplaceholder:library:1.1.1@aar'
 }
 
 ```
