@@ -9,21 +9,41 @@ Android View that displays different content based on data state (Loading,Empty,
 You can create your own data place holder in xml like this (remeber to add ```xmlns:app="http://schemas.android.com/apk/res-auto"```):
 
 ```xml
-    <com.abdallaadelessa.android.dataplaceholder.DataPlaceHolder
-        android:id="@+id/dataplaceholder"
+    <com.abdallaadelessa.android.dataplaceholder.SimplePlaceHolder
+        android:id="@+id/placeHolder"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:dataViewId="@+id/textView"
+        app:imageHeight="200dp"
+        app:imageWidth="200dp"
         app:messageTextColor="@color/colorPrimary"
-        app:progressBarColor="@color/colorPrimary"
-        app:showMessage="No Content"
-        app:showProgress="0"
-        app:showStateImage="@drawable/navigation_error"
-        app:stateImageHeight="200dp"
-        app:stateImageWidth="200dp">
-         <!-- here you can put your list , recycler view or any other content -->
-    </com.abdallaadelessa.android.dataplaceholder.DataPlaceHolder>
+        app:progressColor="@color/colorPrimary"
+        app:showImage="@drawable/test"
+        app:showMessage="Loading...">
+          <!-- here you can put your list , recycler view or any other content -->
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="My Data"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+    </com.abdallaadelessa.android.dataplaceholder.SimplePlaceHolder>
+    
+DataPlaceHolder Attrs
+
+```xml
+
+        <attr name="loadLayoutId" format="reference" />
+        <attr name="errorLayoutId" format="reference" />
+        <attr name="dataLayoutId" format="reference" />
+        <attr name="loadViewId" format="reference" />
+        <attr name="errorViewId" format="reference" />
+        <attr name="dataViewId" format="reference" />
+
 ```
-Attrs
+```
+SimplePlaceHolder Attrs
 
 ```xml
 
@@ -88,7 +108,7 @@ repositories {
 }
 
 dependencies {
-    compile 'com.abdallaadelessa.android.dataplaceholder:library:1.1.1@aar'
+    compile 'com.abdallaadelessa.android.dataplaceholder:library:1.2.1@aar'
 }
 
 ```
