@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
-import com.abdallaadelessa.android.dataplaceholder.DataPlaceHolder;
+import com.abdallaadelessa.android.dataplaceholder.SimplePlaceHolder;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -27,8 +27,8 @@ public class MainActivity extends AppCompatActivity {
     Button btnDeterminateLoading;
     @BindView(R.id.btnDimProgress)
     Button btnDimProgress;
-    @BindView(R.id.dataplaceholder)
-    DataPlaceHolder dataPlaceHolder;
+    @BindView(R.id.placeHolder)
+    SimplePlaceHolder placeHolder;
     private Thread thread;
 
     @Override
@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         switch (view.getId()) {
             case R.id.btnError:
                 thread = null;
-                dataPlaceHolder.showMessage("No Connection Error", -1, "Retry", new Runnable() {
+                placeHolder.showMessage("No Connection Error", -1, "Retry", new Runnable() {
                     @Override
                     public void run() {
                         (findViewById(R.id.btnSuccess)).performClick();
@@ -52,15 +52,15 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.btnSuccess:
                 thread = null;
-                dataPlaceHolder.dismissAll();
+                placeHolder.dismissAll();
                 break;
             case R.id.btnEmpty:
                 thread = null;
-                dataPlaceHolder.showMessage("No Content", R.drawable.navigation_error);
+                placeHolder.showMessage("No Content", R.drawable.navigation_error);
                 break;
             case R.id.btnInDeterminateLoading:
                 thread = null;
-                dataPlaceHolder.showProgress();
+                placeHolder.showProgress();
                 break;
             case R.id.btnDeterminateLoading:
                 if (thread == null) {
@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
                                 handler.post(new Runnable() {
                                     @Override
                                     public void run() {
-                                        dataPlaceHolder.showMessage(progress + "% Loading...", progress, -1);
+                                        placeHolder.showMessage(progress + "% Loading...", progress, -1);
                                     }
                                 });
                                 try {
@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.btnDimProgress:
                 thread = null;
-                dataPlaceHolder.showDimProgress();
+                placeHolder.showDimProgress();
                 break;
         }
     }

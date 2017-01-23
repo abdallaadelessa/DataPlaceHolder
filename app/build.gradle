@@ -28,6 +28,6 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.3.0'
     compile 'com.jakewharton:butterknife:8.1.0'
     apt 'com.jakewharton:butterknife-compiler:8.1.0'
-    compile 'com.abdallaadelessa.android.dataplaceholder:library:1.1.1@aar'
-//    compile project(':library')
+    //compile 'com.abdallaadelessa.android.dataplaceholder:library:1.1.1@aar'
+    compile project(path: ':library')
 }

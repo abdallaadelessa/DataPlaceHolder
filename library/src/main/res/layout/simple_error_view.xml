@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     xmlns:wheel="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/vgParentLayout"
-    android:clickable="true"
+    android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:padding="@dimen/spacing_8">
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:showIn="@layout/dataplaceholder">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,35 +15,36 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:orientation="vertical">
+
         <ImageView
-            android:id="@+id/imgState"
+            android:id="@+id/ivImage"
             android:layout_width="@dimen/spacing_100"
             android:layout_height="@dimen/spacing_100"
             android:layout_margin="@dimen/spacing_8"
-            android:src="@drawable/navigation_error"/>
+            android:src="@drawable/navigation_error" />
 
         <com.abdallaadelessa.android.dataplaceholder.ProgressWheel
             android:id="@+id/pbProgress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/spacing_8"
             android:layout_gravity="center"
+            android:layout_margin="@dimen/spacing_8"
             wheel:matProg_circleRadius="@dimen/spacing_50"
-            wheel:matProg_progressIndeterminate="true"
-            />
+            wheel:matProg_progressIndeterminate="true" />
 
         <TextView
             android:id="@+id/tvMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:gravity="center"
             android:layout_margin="@dimen/spacing_8"
-            tools:text="No Content"
+            android:gravity="center"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="?colorAccent"/>
+            android:textColor="?colorAccent"
+            tools:text="No Content" />
+
         <Button
-            android:id="@+id/btnRunnable"
+            android:id="@+id/btnAction"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -56,7 +57,6 @@
             android:paddingTop="@dimen/spacing_5"
             android:text="Retry"
             android:textAppearance="?android:textAppearanceSmall"
-            android:textColor="@android:color/white"/>
+            android:textColor="@android:color/white" />
     </LinearLayout>
-
-</FrameLayout>
+</LinearLayout>

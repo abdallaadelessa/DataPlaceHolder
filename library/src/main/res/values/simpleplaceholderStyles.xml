@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="spacing_5">5dp</dimen>
+    <dimen name="spacing_8">8dp</dimen>
+    <dimen name="spacing_12">12dp</dimen>
+    <dimen name="spacing_50">50dp</dimen>
+    <dimen name="spacing_80">80dp</dimen>
+    <dimen name="spacing_100">100dp</dimen>
+    <color name="colorDim">#80000000</color>
+    <declare-styleable name="simplePlaceHolder">
+        <attr name="showMessage" format="string" />
+        <attr name="messageTextColor" format="color" />
+        <attr name="actionBgColor" format="color" />
+        <attr name="actionTextColor" format="color" />
+        <attr name="showImage" format="reference" />
+        <attr name="imageWidth" format="dimension" />
+        <attr name="imageHeight" format="dimension" />
+        <attr name="showProgress" format="integer" />
+        <attr name="progressColor" format="color" />
+        <attr name="progressSize" format="dimension" />
+        <attr name="showDimProgress" format="integer" />
+        <attr name="dimColor" format="color" />
+    </declare-styleable>
+</resources>

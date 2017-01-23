@@ -2,29 +2,32 @@ package com.abdallaadelessa.android.dataplaceholder;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.support.v4.content.ContextCompat;
+import android.support.annotation.LayoutRes;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 
 /**
  * Created by abdalla on 29/07/15.
  */
 public class DataPlaceHolder extends RelativeLayout {
-    private static final String TAG_PLACE_HOLDER = "PlaceHolder";
-    private View vgParentLayout;
-    private ImageView ivState;
-    private TextView tvMessage;
-    private Button btnAction;
-    private ProgressWheel pbProgress;
-    //-->
-    private int mDimModeColor;
-    private boolean mHideContent;
+    protected static final String TAG_PLACE_HOLDER = "PlaceHolder";
+    protected static final int ID_LOAD_VIEW = 111;
+    protected static final int ID_ERROR_VIEW = 222;
+    protected static final int ID_DATA_VIEW = 333;
+    private FrameLayout container;
+    private View loadView;
+    private View errorView;
+    private View dataView;
+    private int dataViewId;
+    private int errorViewId;
+    private int loadViewId;
+
+    //=================>
 
     public DataPlaceHolder(Context context) {
         super(context);
@@ -44,291 +47,205 @@ public class DataPlaceHolder extends RelativeLayout {
     }
 
     @Override
-    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        super.onLayout(changed, left, top, right, bottom);
-        hideContent(mHideContent);
-        if(vgParentLayout != null) bringChildToFront(vgParentLayout);
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        if (loadViewId != -1) {
+            setLoadView(findViewById(loadViewId));
+        }
+        if (errorViewId != -1) {
+            setErrorView(findViewById(errorViewId));
+        }
+        if (dataViewId != -1) {
+            setDataView(findViewById(dataViewId));
+        }
     }
 
-    private static void logError(Exception e) {
+    protected static void logError(Exception e) {
         Log.e(TAG_PLACE_HOLDER, "PlaceHolder Error", e);
     }
 
-    // ------------------------->
+    //=================>
 
-    private void initUI(Context cxt) {
+    protected void initUI(Context context) {
         try {
-            View view = inflate(cxt, R.layout.view_dataplaceholder, this);
-            vgParentLayout = view.findViewById(R.id.vgParentLayout);
-            ivState = (ImageView) view.findViewById(R.id.imgState);
-            tvMessage = (TextView) view.findViewById(R.id.tvMessage);
-            btnAction = (Button) view.findViewById(R.id.btnRunnable);
-            pbProgress = (ProgressWheel) view.findViewById(R.id.pbProgress);
-            setDimColor(ContextCompat.getColor(cxt, R.color.colorDim));
-            dismissAll();
-        }
-        catch(Exception e) {
+            inflate(context, R.layout.dataplaceholder, this);
+            container = (FrameLayout) findViewById(R.id.dataPlaceHolderContainer);
+            initDefaultViews(context);
+        } catch (Exception e) {
             logError(e);
         }
     }
 
-    private void readAttributeSet(Context context, AttributeSet attrs, int defStyle) {
+    protected void initDefaultViews(Context context) {
+        addLoadView(new View(context));
+        addErrorView(new View(context));
+        addDataView(new View(context));
+    }
+
+    protected void readAttributeSet(Context context, AttributeSet attrs, int defStyle) {
         try {
             TypedArray a;
-            if(defStyle != -1) {
-                a = context.obtainStyledAttributes(attrs, R.styleable.app, defStyle, 0);
+            if (defStyle != -1) {
+                a = context.obtainStyledAttributes(attrs, R.styleable.dataPlaceHolder, defStyle, 0);
+            } else {
+                a = context.obtainStyledAttributes(attrs, R.styleable.dataPlaceHolder);
             }
-            else {
-                a = context.obtainStyledAttributes(attrs, R.styleable.app);
+            loadViewId = a.getResourceId(R.styleable.dataPlaceHolder_loadViewId, -1);
+            errorViewId = a.getResourceId(R.styleable.dataPlaceHolder_errorViewId, -1);
+            dataViewId = a.getResourceId(R.styleable.dataPlaceHolder_dataViewId, -1);
+            //===============>
+
+            int loadViewLayoutId = a.getResourceId(R.styleable.dataPlaceHolder_loadLayoutId, -1);
+            int errorViewLayoutId = a.getResourceId(R.styleable.dataPlaceHolder_errorLayoutId, -1);
+            int dataViewLayoutId = a.getResourceId(R.styleable.dataPlaceHolder_dataLayoutId, -1);
+
+            if (loadViewLayoutId != -1) {
+                addLoadView(loadViewLayoutId);
             }
-            int dimModeColor = a.getColor(R.styleable.app_dimModeColor, -1);
-            int messageTextColor = a.getColor(R.styleable.app_messageTextColor, -1);
-            int progressBarColor = a.getColor(R.styleable.app_progressBarColor, -1);
-            int actionButtonBgColor = a.getColor(R.styleable.app_actionButtonBgColor, -1);
-            int actionButtonTextColor = a.getColor(R.styleable.app_actionButtonTextColor, -1);
-            String messageText = a.getString(R.styleable.app_showMessage);
-            int progress = a.getInt(R.styleable.app_showProgress, -1);
-            int dimProgress = a.getInt(R.styleable.app_showDimProgress, -1);
-            int stateImageResId = a.getResourceId(R.styleable.app_showStateImage, -1);
-            int stateImageWidth = (int) a.getDimension(R.styleable.app_stateImageWidth, -1);
-            int stateImageHeight = (int) a.getDimension(R.styleable.app_stateImageHeight, -1);
-            int progressSize = (int) a.getDimension(R.styleable.app_progressSize, -1);
-            // Set Props
-            if(dimModeColor != -1) setDimColor(dimModeColor);
-            if(messageTextColor != -1) setMessageTextColor(messageTextColor);
-            if(progressBarColor != -1) setProgressWheelColor(progressBarColor);
-            if(actionButtonBgColor != -1) setActionButtonBackgroundColor(actionButtonBgColor);
-            if(actionButtonTextColor != -1) setActionButtonTextColor(actionButtonTextColor);
-            if(stateImageWidth != -1) getStateImageView().getLayoutParams().width = stateImageWidth;
-            if(stateImageHeight != -1)
-                getStateImageView().getLayoutParams().height = stateImageHeight;
-            if(progressSize != -1) getProgressWheel().setCircleRadius(progressSize);
-            showMessage(messageText, progress, stateImageResId);
-            if(dimProgress != -1) showDimProgress(dimProgress);
+            if (errorViewLayoutId != -1) {
+                addErrorView(errorViewLayoutId);
+            }
+            if (dataViewLayoutId != -1) {
+                addDataView(dataViewLayoutId);
+            }
             // Recycle
             a.recycle();
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             logError(e);
         }
     }
 
-    // -------------------------> Helpers
+    //===>
 
-    private void dimParentBackground() {
-        vgParentLayout.setClickable(true);
-        vgParentLayout.setBackgroundColor(mDimModeColor);
-    }
-
-    private void clearParentLayoutBackground() {
-        vgParentLayout.setClickable(false);
-        vgParentLayout.setBackgroundDrawable(null);
-    }
-
-    private void hideContent(boolean hide) {
-        mHideContent = hide;
-        for(int i = 0; i < getChildCount() - 1; i++) {
-            getChildAt(i).setVisibility(hide ? GONE : VISIBLE);
+    protected View findChildViewById(int id) {
+        View view = null;
+        for (int i = 0; i < getChildCount(); i++) {
+            View viewAtIndex = getChildAt(i);
+            if (viewAtIndex.getId() == id) {
+                view = viewAtIndex;
+                break;
+            }
         }
+        return view;
     }
 
-    private void hideDataPlaceHolderViews() {
-        clearParentLayoutBackground();
-        btnAction.setVisibility(View.GONE);
-        tvMessage.setVisibility(View.GONE);
-        pbProgress.setVisibility(View.GONE);
-        ivState.setVisibility(View.GONE);
+    protected void replaceContainerView(int id, View view) {
+        Object lastTag = null;
+        int lastVisibilityState = View.VISIBLE;
+        View viewById = findChildViewById(id);
+        if (viewById != null) {
+            // Remove Old
+            lastTag = viewById.getTag();
+            lastVisibilityState = viewById.getVisibility();
+            container.removeView(viewById);
+        }
+        // Add
+        view.setId(id);
+        if (lastTag != null) view.setTag(lastTag);
+        view.setVisibility(lastVisibilityState);
+        container.addView(view);
     }
 
-    // -------------------------> Actions
-
-    private void dismissAllWithContent() {
-        hideContent(true);
-        hideDataPlaceHolderViews();
-    }
+    //=================> Show and Hide
 
     public void dismissAll() {
-        hideContent(false);
-        hideDataPlaceHolderViews();
-    }
-
-    /**
-     * @param message         Text to show
-     * @param progress        if -1 progress will be hidden
-     *                        if 0 Indeterminate progress will be shown
-     *                        if greater than 0 determinate progress will be shown using the given progress
-     * @param dimProgress     if true a dim background will be shown over the content and behind the component views
-     * @param stateImageResId state image resource id to be shown if -1 no image will be shown
-     * @param actionText      action text for the button which is below the message text view if -1 the default text will be used
-     * @param action          the runnable action which would be executed when the action button is clicked if null no action will be executed
-     */
-    public void showMessage(String message, int progress, boolean dimProgress, int stateImageResId, final String actionText, final Runnable action) {
-        if(message != null || progress != -1 || stateImageResId != -1 || actionText != null || action != null) {
-            dismissAllWithContent();
-            if(progress != -1) {
-                pbProgress.setVisibility(VISIBLE);
-                if(progress == 0) {
-                    //Indeterminate
-                    pbProgress.spin();
-                }
-                else {
-                    //Determinate
-                    float instantProgress = ((float) progress) / 100.0f;
-                    pbProgress.setInstantProgress(instantProgress);
-                }
-                if(dimProgress) {
-                    dimParentBackground();
-                }
-                else {
-                    clearParentLayoutBackground();
-                }
-            }
-            if(message != null) {
-                tvMessage.setVisibility(View.VISIBLE);
-                tvMessage.setText(message);
-            }
-            if(action != null) {
-                btnAction.setVisibility(View.VISIBLE);
-                if(actionText != null) {
-                    btnAction.setText(actionText);
-                }
-                btnAction.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        action.run();
-                    }
-                });
-            }
-            if(stateImageResId > 0) {
-                ivState.setVisibility(View.VISIBLE);
-                ivState.setImageResource(stateImageResId);
-            }
+        if (getLoadView() != null) {
+            getLoadView().setVisibility(GONE);
+        }
+        if (getErrorView() != null) {
+            getErrorView().setVisibility(GONE);
+        }
+        if (getDataView() != null) {
+            getDataView().setVisibility(VISIBLE);
         }
     }
 
-    public void showMessage(int messageResId, int progress, boolean dimProgress, int stateImageResId, final int actionTextResId, final Runnable action) {
-        String message = messageResId != -1 ? getResources().getString(messageResId) : null;
-        String actionText = actionTextResId != -1 ? getResources().getString(actionTextResId) : null;
-        showMessage(message, progress, dimProgress, stateImageResId, actionText, action);
+    public void hideDataView() {
+        if (getDataView() != null) {
+            getDataView().setVisibility(GONE);
+        }
     }
 
-    public void showMessage(String message, int stateImageResId, final String actionText, final Runnable action) {
-        showMessage(message, -1, false, stateImageResId, actionText, action);
+    public void showLoadView() {
+        dismissAll();
+        if (getLoadView() != null) {
+            getLoadView().setVisibility(VISIBLE);
+        }
     }
 
-    public void showMessage(String message, final String actionText, final Runnable action) {
-        showMessage(message, -1, false, -1, actionText, action);
+    public void showErrorView() {
+        dismissAll();
+        if (getErrorView() != null) {
+            getErrorView().setVisibility(VISIBLE);
+        }
     }
 
-    public void showMessage(String message, int stateImageResId, final Runnable action) {
-        showMessage(message, -1, false, stateImageResId, null, action);
+    public void showDataView() {
+        dismissAll();
+        if (getDataView() != null) {
+            getDataView().setVisibility(VISIBLE);
+        }
     }
 
-    public void showMessage(String message, final Runnable action) {
-        showMessage(message, -1, false, -1, null, action);
+    //=================> Components Getters and Setters
+
+    public FrameLayout getContainer() {
+        return container;
     }
 
-    public void showMessage(String message, int stateImageResId) {
-        showMessage(message, -1, false, stateImageResId, null, null);
+    public void setLoadView(View loadView) {
+        this.loadView = loadView;
     }
 
-    public void showMessage(String message, int progress, int stateImageResId) {
-        showMessage(message, progress, false, stateImageResId, null, null);
+    public void setErrorView(View errorView) {
+        this.errorView = errorView;
     }
 
-    public void showMessage(String message) {
-        showMessage(message, -1, false, -1, null, null);
+    public void setDataView(View dataView) {
+        this.dataView = dataView;
     }
 
-    public void showStateImage(int stateImageResId, final String actionText, final Runnable action) {
-        showMessage(null, -1, false, stateImageResId, actionText, action);
+    public View getLoadView() {
+        return loadView;
     }
 
-    public void showStateImage(int stateImageResId, final Runnable action) {
-        showMessage(null, -1, false, stateImageResId, null, action);
+    public View getErrorView() {
+        return errorView;
     }
 
-    public void showStateImage(int stateImageResId) {
-        showMessage(null, -1, false, stateImageResId, null, null);
+    public View getDataView() {
+        return dataView;
     }
 
-    public void showActionButton(final String actionText, final Runnable action) {
-        showMessage(null, -1, false, -1, actionText, action);
+    //=================>
+
+    public void addLoadView(@LayoutRes int layout) {
+        addLoadView(LayoutInflater.from(getContext()).inflate(layout, null));
     }
 
-    public void showActionButton(final Runnable action) {
-        showMessage(null, -1, false, -1, null, action);
+    public void addErrorView(@LayoutRes int layout) {
+        addErrorView(LayoutInflater.from(getContext()).inflate(layout, null));
     }
 
-    public void showProgress(String message, int progress) {
-        showMessage(message, progress, false, -1, null, null);
+    public void addDataView(@LayoutRes int layout) {
+        addDataView(LayoutInflater.from(getContext()).inflate(layout, null));
     }
 
-    public void showProgress(int progress) {
-        showProgress(null, progress);
+    public void addLoadView(View loadView) {
+        this.loadView = loadView;
+        replaceContainerView(ID_LOAD_VIEW, loadView);
     }
 
-    public void showProgress() {
-        showProgress(null, 0);
+    public void addErrorView(View errorView) {
+        this.errorView = errorView;
+        replaceContainerView(ID_ERROR_VIEW, errorView);
     }
 
-    public void showDimProgress(String message, int progress) {
-        showMessage(message, progress, true, -1, null, null);
-        hideContent(false);
+    public void addDataView(View dataView) {
+        this.dataView = dataView;
+        replaceContainerView(ID_DATA_VIEW, dataView);
     }
 
-    public void showDimProgress(int progress) {
-        showDimProgress(null, progress);
-    }
-
-    public void showDimProgress() {
-        showDimProgress(null, 0);
-    }
-
-    // -------------------------> Components Getters
-
-    public TextView getMessageTextView() {
-        return tvMessage;
-    }
-
-    public ImageView getStateImageView() {
-        return ivState;
-    }
-
-    public Button getActionButton() {
-        return btnAction;
-    }
-
-    public ProgressWheel getProgressWheel() {
-        return pbProgress;
-    }
-
-    // -------------------------> Edit Properties
-
-    public void setDataPlaceHolderColor(int color) {
-        setProgressWheelColor(color);
-        setMessageTextColor(color);
-        setActionButtonBackgroundColor(color);
-    }
-
-    public void setMessageTextColor(int color) {
-        getMessageTextView().setTextColor(color);
-    }
-
-    public void setActionButtonBackgroundColor(int color) {
-        getActionButton().setBackgroundColor(color);
-    }
-
-    public void setActionButtonTextColor(int color) {
-        getActionButton().setTextColor(color);
-    }
-
-    public void setProgressWheelColor(int color) {
-        getProgressWheel().setBarColor(color);
-    }
-
-    private void setDimColor(int dimModeColor) {
-        mDimModeColor = dimModeColor;
-    }
+    //=================>
 
 }

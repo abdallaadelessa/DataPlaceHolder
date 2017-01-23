@@ -71,16 +71,17 @@
             android:text="Dim Progress" />
     </LinearLayout>
 
-    <com.abdallaadelessa.android.dataplaceholder.DataPlaceHolder
-        android:id="@+id/dataplaceholder"
+    <com.abdallaadelessa.android.dataplaceholder.SimplePlaceHolder
+        android:id="@+id/placeHolder"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:dataViewId="@+id/textView"
+        app:imageHeight="200dp"
+        app:imageWidth="200dp"
         app:messageTextColor="@color/colorPrimary"
-        app:progressBarColor="@color/colorPrimary"
-        app:showMessage="Loading..."
-        app:showStateImage="@drawable/test"
-        app:stateImageHeight="200dp"
-        app:stateImageWidth="200dp">
+        app:progressColor="@color/colorPrimary"
+        app:showImage="@drawable/test"
+        app:showMessage="Loading...">
 
         <TextView
             android:id="@+id/textView"
@@ -89,7 +90,7 @@
             android:layout_gravity="center"
             android:text="My Data"
             android:textAppearance="?android:attr/textAppearanceLarge" />
-    </com.abdallaadelessa.android.dataplaceholder.DataPlaceHolder>
+    </com.abdallaadelessa.android.dataplaceholder.SimplePlaceHolder>
 
 
 </LinearLayout>
