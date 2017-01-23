@@ -29,7 +29,8 @@ You can create your own data place holder in xml like this (remeber to add ```xm
             android:text="My Data"
             android:textAppearance="?android:attr/textAppearanceLarge" />
     </com.abdallaadelessa.android.dataplaceholder.SimplePlaceHolder>
-    
+ ```
+ 
 DataPlaceHolder Attrs
 
 ```xml
@@ -40,8 +41,6 @@ DataPlaceHolder Attrs
         <attr name="loadViewId" format="reference" />
         <attr name="errorViewId" format="reference" />
         <attr name="dataViewId" format="reference" />
-
-```
 ```
 SimplePlaceHolder Attrs
 
