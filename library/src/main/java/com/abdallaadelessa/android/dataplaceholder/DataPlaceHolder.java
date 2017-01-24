@@ -7,8 +7,8 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
 
 
 /**
@@ -20,12 +20,13 @@ public class DataPlaceHolder extends FrameLayout {
     protected static final int ID_ERROR_VIEW = 222;
     protected static final int ID_DATA_VIEW = 333;
     private FrameLayout container;
-    private View loadView;
-    private View errorView;
-    private View dataView;
-    private int dataViewId;
-    private int errorViewId;
-    private int loadViewId;
+    private DataPlaceHolderListener listener;
+    protected View loadView;
+    protected View errorView;
+    protected View dataView;
+    protected int dataViewId;
+    protected int errorViewId;
+    protected int loadViewId;
     //=================>
 
     public DataPlaceHolder(Context context) {
@@ -48,16 +49,18 @@ public class DataPlaceHolder extends FrameLayout {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        if (loadViewId != -1) {
-            setLoadView(findViewById(loadViewId));
+        setInitViewsOnAttach(this);
+        if (listener != null) {
+            listener.onAttach();
         }
-        if (errorViewId != -1) {
-            setErrorView(findViewById(errorViewId));
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        if (listener != null) {
+            listener.onDetach();
         }
-        if (dataViewId != -1) {
-            setDataView(findViewById(dataViewId));
-        }
-        dismissAll();
     }
 
     protected static void logError(Exception e) {
@@ -112,12 +115,38 @@ public class DataPlaceHolder extends FrameLayout {
         }
     }
 
+    public void setListener(DataPlaceHolderListener listener) {
+        this.listener = listener;
+    }
+
     //===>
+
+    protected void setInitViewsOnAttach(ViewGroup viewGroup) {
+        if (loadViewId != -1) {
+            View viewById = viewGroup.findViewById(loadViewId);
+            if (viewById != null) {
+                setLoadView(viewById);
+            }
+        }
+        if (errorViewId != -1) {
+            View viewById = viewGroup.findViewById(errorViewId);
+            if (viewById != null) {
+                setErrorView(viewById);
+            }
+        }
+        if (dataViewId != -1) {
+            View viewById = viewGroup.findViewById(dataViewId);
+            if (viewById != null) {
+                setDataView(viewById);
+            }
+        }
+        dismissAll();
+    }
 
     protected View findChildViewById(int id) {
         View view = null;
-        for (int i = 0; i < container.getChildCount(); i++) {
-            View viewAtIndex = container.getChildAt(i);
+        for (int i = 0; i < getContainer().getChildCount(); i++) {
+            View viewAtIndex = getContainer().getChildAt(i);
             if (viewAtIndex.getId() == id) {
                 view = viewAtIndex;
                 break;
@@ -134,27 +163,27 @@ public class DataPlaceHolder extends FrameLayout {
             // Remove Old
             lastTag = viewById.getTag();
             lastVisibilityState = viewById.getVisibility();
-            container.removeView(viewById);
+            getContainer().removeView(viewById);
         }
         if (view != null) {
             // Add
             view.setId(id);
             if (lastTag != null) view.setTag(lastTag);
             view.setVisibility(lastVisibilityState);
-            container.addView(view);
+            getContainer().addView(view);
         }
     }
 
     protected void replaceAndSetContainerView(int id, View view) {
-        if (container == null) return;
+        if (getContainer() == null) return;
         Object lastTag = null;
         int lastVisibilityState = View.VISIBLE;
-        View viewById = container.findViewById(id);
+        View viewById = getContainer().findViewById(id);
         if (viewById != null) {
             // Remove Old
             lastTag = viewById.getTag();
             lastVisibilityState = viewById.getVisibility();
-            container.removeView(viewById);
+            getContainer().removeView(viewById);
         }
         if (view != null) {
             // Set
@@ -264,4 +293,8 @@ public class DataPlaceHolder extends FrameLayout {
 
     //=================>
 
+    public interface DataPlaceHolderListener {
+        void onAttach();
+        void onDetach();
+    }
 }

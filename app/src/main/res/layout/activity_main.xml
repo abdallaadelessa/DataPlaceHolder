@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:gravity="center"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
     <LinearLayout
@@ -74,12 +74,14 @@
 
     <com.abdallaadelessa.android.dataplaceholder.SimplePlaceHolder
         android:id="@+id/placeHolder"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:gravity="center"
         app:dataViewId="@+id/textView"
-        app:showDimMode="true"
-     >
+        app:messageTextColor="@color/colorPrimary"
+        app:progressColor="@color/colorPrimary"
+        app:showDimMode="true">
+
         <TextView
             android:id="@+id/textView"
             android:layout_width="wrap_content"

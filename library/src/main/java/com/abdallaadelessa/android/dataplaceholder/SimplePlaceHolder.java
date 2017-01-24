@@ -4,22 +4,20 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.DrawableRes;
-import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /**
  * Created by abdullah on 1/23/17.
  */
 
-public class SimplePlaceHolder extends DataPlaceHolder {
-    private int dimModeColor;
+public class SimplePlaceHolder extends FrameLayout {
+    private DataPlaceHolder dataPlaceHolder;
     private ImageView ivImage;
     private TextView tvMessage;
     private Button btnAction;
@@ -29,53 +27,63 @@ public class SimplePlaceHolder extends DataPlaceHolder {
     private boolean initShowDimMode;
     private int initProgress;
     private int initImageResId;
+    private int dimModeColor;
 
     //=================>
 
     public SimplePlaceHolder(Context context) {
         super(context);
+        initUI(context);
     }
 
     public SimplePlaceHolder(Context context, AttributeSet attrs) {
         super(context, attrs);
+        initUI(context);
+        readAttributeSet(context, attrs, -1);
     }
 
     public SimplePlaceHolder(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-    }
-
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        if (initShowDimMode) {
-            showDimProgress();
-        } else if (initMessageText != null || initProgress != -1 || initImageResId != -1) {
-            showMessage(initMessageText, initProgress, initImageResId);
-        }
+        initUI(context);
+        readAttributeSet(context, attrs, defStyle);
     }
 
     //=================>
 
-    @Override
+    private void initDataPlaceHolder() {
+        dataPlaceHolder = new DataPlaceHolder(getContext());
+        dataPlaceHolder.addErrorView(R.layout.simple_error_view);
+        dataPlaceHolder.setListener(new DataPlaceHolder.DataPlaceHolderListener() {
+            @Override
+            public void onAttach() {
+                dataPlaceHolder.setInitViewsOnAttach(SimplePlaceHolder.this);
+                if (initShowDimMode) {
+                    showDimProgress();
+                } else if (initMessageText != null || initProgress != -1 || initImageResId != -1) {
+                    showMessage(initMessageText, initProgress, initImageResId);
+                }
+            }
+
+            @Override
+            public void onDetach() {
+                
+            }
+        });
+        addView(dataPlaceHolder);
+    }
+
     protected void initUI(Context context) {
-        super.initUI(context);
-        setDimColor(getColor(R.color.colorDim));
+        initDataPlaceHolder();
+        setDimColor(Utils.getColor(context, R.color.colorDim));
         ivImage = (ImageView) findViewById(R.id.ivImage);
         tvMessage = (TextView) findViewById(R.id.tvMessage);
         btnAction = (Button) findViewById(R.id.btnAction);
         pbProgress = (ProgressWheel) findViewById(R.id.pbProgress);
     }
 
-    @Override
-    protected void initDefaultViews(Context context) {
-        super.initDefaultViews(context);
-        addErrorView(R.layout.simple_error_view);
-    }
-
-    @Override
     protected void readAttributeSet(Context context, AttributeSet attrs, int defStyle) {
         try {
-            super.readAttributeSet(context, attrs, defStyle);
+            getDataPlaceHolder().readAttributeSet(context, attrs, defStyle);
             TypedArray a;
             if (defStyle != -1) {
                 a = context.obtainStyledAttributes(attrs, R.styleable.simplePlaceHolder, defStyle, 0);
@@ -122,7 +130,7 @@ public class SimplePlaceHolder extends DataPlaceHolder {
             // Recycle
             a.recycle();
         } catch (Exception e) {
-            logError(e);
+            getDataPlaceHolder().logError(e);
         }
     }
 
@@ -176,13 +184,11 @@ public class SimplePlaceHolder extends DataPlaceHolder {
 
     public void showMessage(String message, Drawable image, String actionString, int progress, boolean dimMode, final Runnable action) {
         dismissAll();
-        if (getDataView() != null) {
-            getDataView().setVisibility(GONE);
-        }
+        showOrHideDataView(GONE);
         if (message != null || image != null || actionString != null || progress != -1 || action != null) {
             //==> Message
             if (message != null) {
-                getErrorView().setVisibility(VISIBLE);
+                showErrorView();
                 tvMessage.setVisibility(View.VISIBLE);
                 tvMessage.setText(message);
             } else {
@@ -190,7 +196,7 @@ public class SimplePlaceHolder extends DataPlaceHolder {
             }
             //==> Image
             if (image != null) {
-                getErrorView().setVisibility(VISIBLE);
+                showErrorView();
                 ivImage.setVisibility(View.VISIBLE);
                 ivImage.setImageDrawable(image);
             } else {
@@ -198,12 +204,12 @@ public class SimplePlaceHolder extends DataPlaceHolder {
             }
             //==> Action
             if (actionString != null) {
-                getErrorView().setVisibility(VISIBLE);
+                showErrorView();
                 btnAction.setVisibility(View.VISIBLE);
                 btnAction.setText(actionString);
             }
             if (action != null) {
-                getErrorView().setVisibility(VISIBLE);
+                showErrorView();
                 btnAction.setVisibility(View.VISIBLE);
                 btnAction.setOnClickListener(new OnClickListener() {
                     @Override
@@ -216,7 +222,7 @@ public class SimplePlaceHolder extends DataPlaceHolder {
             }
             //==> Progress
             if (progress != -1) {
-                getErrorView().setVisibility(VISIBLE);
+                showErrorView();
                 pbProgress.setVisibility(VISIBLE);
                 if (progress == 0) {
                     //Indeterminate
@@ -231,45 +237,32 @@ public class SimplePlaceHolder extends DataPlaceHolder {
             }
             //==> Dim Mode
             if (dimMode) {
-                if (getDataView() != null) {
-                    getDataView().setVisibility(VISIBLE);
-                }
+                showOrHideDataView(VISIBLE);
                 if (getErrorView() != null) {
                     getErrorView().setClickable(true);
                     getErrorView().setBackgroundColor(dimModeColor);
-                    updateViewSize(LayoutParams.MATCH_PARENT, getErrorView());
-                    updateViewSize(LayoutParams.MATCH_PARENT, getContainer());
+                    Utils.updateViewSize(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, getErrorView());
+                    Utils.updateViewSize(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, getContainer());
                     getErrorView().bringToFront();
                 }
             } else {
-                if (getDataView() != null) {
-                    getDataView().setVisibility(GONE);
-                }
+                showOrHideDataView(GONE);
                 if (getErrorView() != null) {
                     getErrorView().setClickable(false);
-                    getErrorView().setBackgroundColor(getColor(android.R.color.transparent));
-                    updateViewSize(LayoutParams.WRAP_CONTENT, getErrorView());
-                    updateViewSize(LayoutParams.WRAP_CONTENT, getContainer());
+                    getErrorView().setBackgroundColor(Utils.getColor(getContext(), android.R.color.transparent));
+                    Utils.updateViewSize(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, getErrorView());
+                    Utils.updateViewSize(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, getContainer());
                 }
             }
         }
     }
 
-    private void updateViewSize(int size, View view) {
-        if (view != null) {
-            ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
-            layoutParams.width = size;
-            layoutParams.height = size;
-            view.setLayoutParams(layoutParams);
-        }
-    }
-
     public void showMessage(@StringRes int messageStringId, @DrawableRes int imageResId, final @StringRes int actionStringId, int progress, boolean dimMode, final Runnable action) {
-        showMessage(getString(messageStringId), getResources().getDrawable(imageResId), getString(actionStringId), progress, dimMode, action);
+        showMessage(Utils.getString(getContext(), messageStringId), Utils.getDrawable(getContext(), imageResId), Utils.getString(getContext(), actionStringId), progress, dimMode, action);
     }
 
     public void showMessage(String message, @DrawableRes int imageResId, final String actionString, final Runnable action) {
-        showMessage(message, getDrawable(imageResId), actionString, -1, false, action);
+        showMessage(message, Utils.getDrawable(getContext(), imageResId), actionString, -1, false, action);
     }
 
     public void showMessage(String message, final String actionString, final Runnable action) {
@@ -277,7 +270,7 @@ public class SimplePlaceHolder extends DataPlaceHolder {
     }
 
     public void showMessage(String message, @DrawableRes int imageResId, final Runnable action) {
-        showMessage(message, getDrawable(imageResId), null, -1, false, action);
+        showMessage(message, Utils.getDrawable(getContext(), imageResId), null, -1, false, action);
     }
 
     public void showMessage(String message, final Runnable action) {
@@ -285,11 +278,11 @@ public class SimplePlaceHolder extends DataPlaceHolder {
     }
 
     public void showMessage(String message, @DrawableRes int imageResId) {
-        showMessage(message, getDrawable(imageResId), null, -1, false, null);
+        showMessage(message, Utils.getDrawable(getContext(), imageResId), null, -1, false, null);
     }
 
     public void showMessage(String message, int progress, @DrawableRes int imageResId) {
-        showMessage(message, getDrawable(imageResId), null, progress, false, null);
+        showMessage(message, Utils.getDrawable(getContext(), imageResId), null, progress, false, null);
     }
 
     public void showMessage(String message) {
@@ -297,15 +290,15 @@ public class SimplePlaceHolder extends DataPlaceHolder {
     }
 
     public void showImage(@DrawableRes int imageResId, final String actionString, final Runnable action) {
-        showMessage(null, getDrawable(imageResId), actionString, -1, false, action);
+        showMessage(null, Utils.getDrawable(getContext(), imageResId), actionString, -1, false, action);
     }
 
     public void showImage(@DrawableRes int imageResId, final Runnable action) {
-        showMessage(null, getDrawable(imageResId), null, -1, false, action);
+        showMessage(null, Utils.getDrawable(getContext(), imageResId), null, -1, false, action);
     }
 
     public void showImage(@DrawableRes int imageResId) {
-        showMessage(null, getDrawable(imageResId), null, -1, false, null);
+        showMessage(null, Utils.getDrawable(getContext(), imageResId), null, -1, false, null);
     }
 
     public void showActionButton(final String actionString, final Runnable action) {
@@ -340,27 +333,38 @@ public class SimplePlaceHolder extends DataPlaceHolder {
         showMessage(null, null, null, 0, true, null);
     }
 
+    //=================> DataPlaceHolder
+
+    public DataPlaceHolder getDataPlaceHolder() {
+        return dataPlaceHolder;
+    }
+
+    public void dismissAll() {
+        getDataPlaceHolder().dismissAll();
+    }
+
+    private View getContainer() {
+        return this;
+    }
+
+    private View getErrorView() {
+        return getDataPlaceHolder().getErrorView();
+    }
+
+    private View getDataView() {
+        return getDataPlaceHolder().getDataView();
+    }
+
+    private void showErrorView() {
+        getErrorView().setVisibility(VISIBLE);
+    }
+
+    private void showOrHideDataView(int visible) {
+        if (getDataView() != null) {
+            getDataView().setVisibility(visible);
+        }
+    }
+
     //=================>
-
-    private int getColor(int color) {
-        return getResources().getColor(color);
-    }
-
-    @NonNull
-    private String getString(@StringRes int messageStringId) {
-        String text = null;
-        if (messageStringId != -1) {
-            text = getResources().getString(messageStringId);
-        }
-        return text;
-    }
-
-    private Drawable getDrawable(@DrawableRes int imageResId) {
-        Drawable drawable = null;
-        if (imageResId != -1) {
-            drawable = getResources().getDrawable(imageResId);
-        }
-        return drawable;
-    }
 
 }
