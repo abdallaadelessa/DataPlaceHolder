@@ -80,8 +80,8 @@
         app:dataViewId="@+id/textView"
         app:messageTextColor="@color/colorPrimary"
         app:progressColor="@color/colorPrimary"
+        app:actionBgColor="@color/colorPrimary"
         app:showDimMode="true">
-
         <TextView
             android:id="@+id/textView"
             android:layout_width="wrap_content"

@@ -66,7 +66,7 @@ public class SimplePlaceHolder extends FrameLayout {
 
             @Override
             public void onDetach() {
-                
+
             }
         });
         addView(dataPlaceHolder);
