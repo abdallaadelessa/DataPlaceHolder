@@ -7,10 +7,11 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /**
@@ -23,6 +24,11 @@ public class SimplePlaceHolder extends DataPlaceHolder {
     private TextView tvMessage;
     private Button btnAction;
     private ProgressWheel pbProgress;
+    //===>
+    private String initMessageText;
+    private boolean initShowDimMode;
+    private int initProgress;
+    private int initImageResId;
 
     //=================>
 
@@ -38,11 +44,22 @@ public class SimplePlaceHolder extends DataPlaceHolder {
         super(context, attrs, defStyle);
     }
 
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        if (initShowDimMode) {
+            showDimProgress();
+        } else if (initMessageText != null || initProgress != -1 || initImageResId != -1) {
+            showMessage(initMessageText, initProgress, initImageResId);
+        }
+    }
+
     //=================>
 
     @Override
     protected void initUI(Context context) {
         super.initUI(context);
+        setDimColor(getColor(R.color.colorDim));
         ivImage = (ImageView) findViewById(R.id.ivImage);
         tvMessage = (TextView) findViewById(R.id.tvMessage);
         btnAction = (Button) findViewById(R.id.btnAction);
@@ -65,15 +82,15 @@ public class SimplePlaceHolder extends DataPlaceHolder {
             } else {
                 a = context.obtainStyledAttributes(attrs, R.styleable.simplePlaceHolder);
             }
-            String messageText = a.getString(R.styleable.simplePlaceHolder_showMessage);
-            int progress = a.getInt(R.styleable.simplePlaceHolder_showProgress, -1);
-            int imageResId = a.getResourceId(R.styleable.simplePlaceHolder_showImage, -1);
+            initShowDimMode = a.getBoolean(R.styleable.simplePlaceHolder_showDimMode, false);
+            initMessageText = a.getString(R.styleable.simplePlaceHolder_showMessage);
+            initProgress = a.getInt(R.styleable.simplePlaceHolder_showProgress, -1);
+            initImageResId = a.getResourceId(R.styleable.simplePlaceHolder_showImage, -1);
             int dimColor = a.getColor(R.styleable.simplePlaceHolder_dimColor, -1);
             int messageTextColor = a.getColor(R.styleable.simplePlaceHolder_messageTextColor, -1);
             int progressColor = a.getColor(R.styleable.simplePlaceHolder_progressColor, -1);
             int actionBgColor = a.getColor(R.styleable.simplePlaceHolder_actionBgColor, -1);
             int actionTextColor = a.getColor(R.styleable.simplePlaceHolder_actionTextColor, -1);
-            int dimProgress = a.getInt(R.styleable.simplePlaceHolder_showDimProgress, -1);
             int imageImageWidth = (int) a.getDimension(R.styleable.simplePlaceHolder_imageWidth, -1);
             int imageImageHeight = (int) a.getDimension(R.styleable.simplePlaceHolder_imageHeight, -1);
             int progressSize = (int) a.getDimension(R.styleable.simplePlaceHolder_progressSize, -1);
@@ -101,11 +118,6 @@ public class SimplePlaceHolder extends DataPlaceHolder {
             }
             if (progressSize != -1) {
                 getProgressWheel().setCircleRadius(progressSize);
-            }
-            if (dimProgress != -1) {
-                showDimProgress(dimProgress);
-            } else {
-                showMessage(messageText, progress, imageResId);
             }
             // Recycle
             a.recycle();
@@ -164,7 +176,9 @@ public class SimplePlaceHolder extends DataPlaceHolder {
 
     public void showMessage(String message, Drawable image, String actionString, int progress, boolean dimMode, final Runnable action) {
         dismissAll();
-        hideDataView();
+        if (getDataView() != null) {
+            getDataView().setVisibility(GONE);
+        }
         if (message != null || image != null || actionString != null || progress != -1 || action != null) {
             //==> Message
             if (message != null) {
@@ -217,12 +231,36 @@ public class SimplePlaceHolder extends DataPlaceHolder {
             }
             //==> Dim Mode
             if (dimMode) {
-                getContainer().setClickable(true);
-                getContainer().setBackgroundColor(dimModeColor);
+                if (getDataView() != null) {
+                    getDataView().setVisibility(VISIBLE);
+                }
+                if (getErrorView() != null) {
+                    getErrorView().setClickable(true);
+                    getErrorView().setBackgroundColor(dimModeColor);
+                    updateViewSize(LayoutParams.MATCH_PARENT, getErrorView());
+                    updateViewSize(LayoutParams.MATCH_PARENT, getContainer());
+                    getErrorView().bringToFront();
+                }
             } else {
-                getContainer().setClickable(false);
-                getContainer().setBackgroundColor(getResources().getColor(android.R.color.transparent));
+                if (getDataView() != null) {
+                    getDataView().setVisibility(GONE);
+                }
+                if (getErrorView() != null) {
+                    getErrorView().setClickable(false);
+                    getErrorView().setBackgroundColor(getColor(android.R.color.transparent));
+                    updateViewSize(LayoutParams.WRAP_CONTENT, getErrorView());
+                    updateViewSize(LayoutParams.WRAP_CONTENT, getContainer());
+                }
             }
+        }
+    }
+
+    private void updateViewSize(int size, View view) {
+        if (view != null) {
+            ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+            layoutParams.width = size;
+            layoutParams.height = size;
+            view.setLayoutParams(layoutParams);
         }
     }
 
@@ -303,6 +341,10 @@ public class SimplePlaceHolder extends DataPlaceHolder {
     }
 
     //=================>
+
+    private int getColor(int color) {
+        return getResources().getColor(color);
+    }
 
     @NonNull
     private String getString(@StringRes int messageStringId) {

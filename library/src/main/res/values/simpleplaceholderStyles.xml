@@ -18,7 +18,7 @@
         <attr name="showProgress" format="integer" />
         <attr name="progressColor" format="color" />
         <attr name="progressSize" format="dimension" />
-        <attr name="showDimProgress" format="integer" />
+        <attr name="showDimMode" format="boolean" />
         <attr name="dimColor" format="color" />
     </declare-styleable>
 </resources>

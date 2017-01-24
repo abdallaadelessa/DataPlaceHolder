@@ -14,7 +14,7 @@ import android.widget.RelativeLayout;
 /**
  * Created by abdalla on 29/07/15.
  */
-public class DataPlaceHolder extends RelativeLayout {
+public class DataPlaceHolder extends FrameLayout {
     protected static final String TAG_PLACE_HOLDER = "PlaceHolder";
     protected static final int ID_LOAD_VIEW = 111;
     protected static final int ID_ERROR_VIEW = 222;
@@ -26,7 +26,6 @@ public class DataPlaceHolder extends RelativeLayout {
     private int dataViewId;
     private int errorViewId;
     private int loadViewId;
-
     //=================>
 
     public DataPlaceHolder(Context context) {
@@ -58,6 +57,7 @@ public class DataPlaceHolder extends RelativeLayout {
         if (dataViewId != -1) {
             setDataView(findViewById(dataViewId));
         }
+        dismissAll();
     }
 
     protected static void logError(Exception e) {
@@ -68,8 +68,7 @@ public class DataPlaceHolder extends RelativeLayout {
 
     protected void initUI(Context context) {
         try {
-            inflate(context, R.layout.dataplaceholder, this);
-            container = (FrameLayout) findViewById(R.id.dataPlaceHolderContainer);
+            container = this;
             initDefaultViews(context);
         } catch (Exception e) {
             logError(e);
@@ -77,9 +76,7 @@ public class DataPlaceHolder extends RelativeLayout {
     }
 
     protected void initDefaultViews(Context context) {
-        addLoadView(new View(context));
-        addErrorView(new View(context));
-        addDataView(new View(context));
+
     }
 
     protected void readAttributeSet(Context context, AttributeSet attrs, int defStyle) {
@@ -119,8 +116,8 @@ public class DataPlaceHolder extends RelativeLayout {
 
     protected View findChildViewById(int id) {
         View view = null;
-        for (int i = 0; i < getChildCount(); i++) {
-            View viewAtIndex = getChildAt(i);
+        for (int i = 0; i < container.getChildCount(); i++) {
+            View viewAtIndex = container.getChildAt(i);
             if (viewAtIndex.getId() == id) {
                 view = viewAtIndex;
                 break;
@@ -129,7 +126,7 @@ public class DataPlaceHolder extends RelativeLayout {
         return view;
     }
 
-    protected void replaceContainerView(int id, View view) {
+    protected void replaceAndAddContainerView(int id, View view) {
         Object lastTag = null;
         int lastVisibilityState = View.VISIBLE;
         View viewById = findChildViewById(id);
@@ -139,11 +136,31 @@ public class DataPlaceHolder extends RelativeLayout {
             lastVisibilityState = viewById.getVisibility();
             container.removeView(viewById);
         }
-        // Add
-        view.setId(id);
-        if (lastTag != null) view.setTag(lastTag);
-        view.setVisibility(lastVisibilityState);
-        container.addView(view);
+        if (view != null) {
+            // Add
+            view.setId(id);
+            if (lastTag != null) view.setTag(lastTag);
+            view.setVisibility(lastVisibilityState);
+            container.addView(view);
+        }
+    }
+
+    protected void replaceAndSetContainerView(int id, View view) {
+        if (container == null) return;
+        Object lastTag = null;
+        int lastVisibilityState = View.VISIBLE;
+        View viewById = container.findViewById(id);
+        if (viewById != null) {
+            // Remove Old
+            lastTag = viewById.getTag();
+            lastVisibilityState = viewById.getVisibility();
+            container.removeView(viewById);
+        }
+        if (view != null) {
+            // Set
+            if (lastTag != null) view.setTag(lastTag);
+            view.setVisibility(lastVisibilityState);
+        }
     }
 
     //=================> Show and Hide
@@ -157,12 +174,6 @@ public class DataPlaceHolder extends RelativeLayout {
         }
         if (getDataView() != null) {
             getDataView().setVisibility(VISIBLE);
-        }
-    }
-
-    public void hideDataView() {
-        if (getDataView() != null) {
-            getDataView().setVisibility(GONE);
         }
     }
 
@@ -193,18 +204,6 @@ public class DataPlaceHolder extends RelativeLayout {
         return container;
     }
 
-    public void setLoadView(View loadView) {
-        this.loadView = loadView;
-    }
-
-    public void setErrorView(View errorView) {
-        this.errorView = errorView;
-    }
-
-    public void setDataView(View dataView) {
-        this.dataView = dataView;
-    }
-
     public View getLoadView() {
         return loadView;
     }
@@ -217,7 +216,24 @@ public class DataPlaceHolder extends RelativeLayout {
         return dataView;
     }
 
-    //=================>
+    //=================> set new View
+
+    public void setLoadView(View loadView) {
+        this.loadView = loadView;
+        replaceAndSetContainerView(ID_LOAD_VIEW, loadView);
+    }
+
+    public void setErrorView(View errorView) {
+        this.errorView = errorView;
+        replaceAndSetContainerView(ID_ERROR_VIEW, errorView);
+    }
+
+    public void setDataView(View dataView) {
+        this.dataView = dataView;
+        replaceAndSetContainerView(ID_DATA_VIEW, dataView);
+    }
+
+    //=================> Add new View
 
     public void addLoadView(@LayoutRes int layout) {
         addLoadView(LayoutInflater.from(getContext()).inflate(layout, null));
@@ -233,17 +249,17 @@ public class DataPlaceHolder extends RelativeLayout {
 
     public void addLoadView(View loadView) {
         this.loadView = loadView;
-        replaceContainerView(ID_LOAD_VIEW, loadView);
+        replaceAndAddContainerView(ID_LOAD_VIEW, loadView);
     }
 
     public void addErrorView(View errorView) {
         this.errorView = errorView;
-        replaceContainerView(ID_ERROR_VIEW, errorView);
+        replaceAndAddContainerView(ID_ERROR_VIEW, errorView);
     }
 
     public void addDataView(View dataView) {
         this.dataView = dataView;
-        replaceContainerView(ID_DATA_VIEW, dataView);
+        replaceAndAddContainerView(ID_DATA_VIEW, dataView);
     }
 
     //=================>
