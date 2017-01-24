@@ -4,8 +4,10 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.StringRes;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -150,6 +152,20 @@ public class SimplePlaceHolder extends FrameLayout {
 
     public ProgressWheel getProgressWheel() {
         return pbProgress;
+    }
+
+    //=================>
+
+    public void setDataView(View dataView) {
+        getDataPlaceHolder().setDataView(dataView);
+    }
+
+    public void addDataView(@LayoutRes int layout) {
+        getDataPlaceHolder().addDataView(LayoutInflater.from(getContext()).inflate(layout, null));
+    }
+
+    public void addDataView(View dataView) {
+        getDataPlaceHolder().addDataView(dataView);
     }
 
     //=================> Edit Properties
