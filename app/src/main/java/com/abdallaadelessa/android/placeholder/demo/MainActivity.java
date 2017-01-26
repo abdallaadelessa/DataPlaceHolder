@@ -1,4 +1,4 @@
-package com.abdallaadelessa.android.dataplaceholder.demo;
+package com.abdallaadelessa.android.placeholder.demo;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
-import com.abdallaadelessa.android.dataplaceholder.SimplePlaceHolder;
+import com.abdallaadelessa.android.placeholder.SimplePlaceHolder;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

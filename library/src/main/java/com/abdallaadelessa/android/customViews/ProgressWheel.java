@@ -1,4 +1,4 @@
-package com.abdallaadelessa.android.dataplaceholder;
+package com.abdallaadelessa.android.customViews;
 
 
 import android.annotation.TargetApi;
@@ -17,6 +17,8 @@ import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
+
+import com.abdallaadelessa.android.placeholder.R;
 
 /**
  * A Material style progress wheel, compatible up to 2.2.

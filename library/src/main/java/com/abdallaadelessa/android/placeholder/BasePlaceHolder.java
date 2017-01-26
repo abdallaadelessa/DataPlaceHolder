@@ -1,26 +1,26 @@
-package com.abdallaadelessa.android.dataplaceholder;
+package com.abdallaadelessa.android.placeholder;
 
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.annotation.LayoutRes;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
+import com.abdallaadelessa.android.utils.Utils;
+
 
 /**
  * Created by abdalla on 29/07/15.
  */
-public class DataPlaceHolder extends FrameLayout {
-    protected static final String TAG_PLACE_HOLDER = "PlaceHolder";
+public abstract class BasePlaceHolder extends FrameLayout {
     protected static final int ID_LOAD_VIEW = 111;
     protected static final int ID_ERROR_VIEW = 222;
     protected static final int ID_DATA_VIEW = 333;
-    private FrameLayout container;
-    private DataPlaceHolderListener listener;
+    protected FrameLayout container;
+    protected PlaceHolderListener listener;
     protected View loadView;
     protected View errorView;
     protected View dataView;
@@ -29,18 +29,18 @@ public class DataPlaceHolder extends FrameLayout {
     protected int loadViewId;
     //=================>
 
-    public DataPlaceHolder(Context context) {
+    public BasePlaceHolder(Context context) {
         super(context);
         initUI(context);
     }
 
-    public DataPlaceHolder(Context context, AttributeSet attrs) {
+    public BasePlaceHolder(Context context, AttributeSet attrs) {
         super(context, attrs);
         initUI(context);
         readAttributeSet(context, attrs, -1);
     }
 
-    public DataPlaceHolder(Context context, AttributeSet attrs, int defStyle) {
+    public BasePlaceHolder(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         initUI(context);
         readAttributeSet(context, attrs, defStyle);
@@ -49,10 +49,7 @@ public class DataPlaceHolder extends FrameLayout {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        setInitViewsOnAttach(this);
-        if (listener != null) {
-            listener.onAttach();
-        }
+        onAttachViews(getContainer());
     }
 
     @Override
@@ -63,10 +60,6 @@ public class DataPlaceHolder extends FrameLayout {
         }
     }
 
-    protected static void logError(Exception e) {
-        Log.e(TAG_PLACE_HOLDER, "PlaceHolder Error", e);
-    }
-
     //=================>
 
     protected void initUI(Context context) {
@@ -74,7 +67,7 @@ public class DataPlaceHolder extends FrameLayout {
             container = this;
             initDefaultViews(context);
         } catch (Exception e) {
-            logError(e);
+            Utils.logError(e);
         }
     }
 
@@ -111,17 +104,17 @@ public class DataPlaceHolder extends FrameLayout {
             // Recycle
             a.recycle();
         } catch (Exception e) {
-            logError(e);
+            Utils.logError(e);
         }
     }
 
-    public void setListener(DataPlaceHolderListener listener) {
+    public void setListener(PlaceHolderListener listener) {
         this.listener = listener;
     }
 
     //===>
 
-    protected void setInitViewsOnAttach(ViewGroup viewGroup) {
+    protected void onAttachViews(ViewGroup viewGroup) {
         if (loadViewId != -1) {
             View viewById = viewGroup.findViewById(loadViewId);
             if (viewById != null) {
@@ -141,6 +134,9 @@ public class DataPlaceHolder extends FrameLayout {
             }
         }
         dismissAll();
+        if (listener != null) {
+            listener.onAttach();
+        }
     }
 
     protected View findChildViewById(int id) {
@@ -206,14 +202,14 @@ public class DataPlaceHolder extends FrameLayout {
         }
     }
 
-    public void showLoadView() {
+    protected void showLoadView() {
         dismissAll();
         if (getLoadView() != null) {
             getLoadView().setVisibility(VISIBLE);
         }
     }
 
-    public void showErrorView() {
+    protected void showErrorView() {
         dismissAll();
         if (getErrorView() != null) {
             getErrorView().setVisibility(VISIBLE);
@@ -233,11 +229,11 @@ public class DataPlaceHolder extends FrameLayout {
         return container;
     }
 
-    public View getLoadView() {
+    protected View getLoadView() {
         return loadView;
     }
 
-    public View getErrorView() {
+    protected View getErrorView() {
         return errorView;
     }
 
@@ -247,12 +243,12 @@ public class DataPlaceHolder extends FrameLayout {
 
     //=================> set new View
 
-    public void setLoadView(View loadView) {
+    protected void setLoadView(View loadView) {
         this.loadView = loadView;
         replaceAndSetContainerView(ID_LOAD_VIEW, loadView);
     }
 
-    public void setErrorView(View errorView) {
+    protected void setErrorView(View errorView) {
         this.errorView = errorView;
         replaceAndSetContainerView(ID_ERROR_VIEW, errorView);
     }
@@ -264,11 +260,11 @@ public class DataPlaceHolder extends FrameLayout {
 
     //=================> Add new View
 
-    public void addLoadView(@LayoutRes int layout) {
+    protected void addLoadView(@LayoutRes int layout) {
         addLoadView(LayoutInflater.from(getContext()).inflate(layout, null));
     }
 
-    public void addErrorView(@LayoutRes int layout) {
+    protected void addErrorView(@LayoutRes int layout) {
         addErrorView(LayoutInflater.from(getContext()).inflate(layout, null));
     }
 
@@ -276,12 +272,12 @@ public class DataPlaceHolder extends FrameLayout {
         addDataView(LayoutInflater.from(getContext()).inflate(layout, null));
     }
 
-    public void addLoadView(View loadView) {
+    protected void addLoadView(View loadView) {
         this.loadView = loadView;
         replaceAndAddContainerView(ID_LOAD_VIEW, loadView);
     }
 
-    public void addErrorView(View errorView) {
+    protected void addErrorView(View errorView) {
         this.errorView = errorView;
         replaceAndAddContainerView(ID_ERROR_VIEW, errorView);
     }
@@ -293,8 +289,9 @@ public class DataPlaceHolder extends FrameLayout {
 
     //=================>
 
-    public interface DataPlaceHolderListener {
+    public interface PlaceHolderListener {
         void onAttach();
+
         void onDetach();
     }
 }
