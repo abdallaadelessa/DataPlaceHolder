@@ -8,7 +8,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -71,7 +74,9 @@ public class SimplePlaceHolder extends BasePlaceHolder {
     @Override
     protected void initDefaultViews(Context context) {
         super.initDefaultViews(context);
-        super.addErrorView(R.layout.simple_error_view);
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.simple_error_view, null);
+        view.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.CENTER));
+        super.addErrorView(view);
     }
 
     @Override
