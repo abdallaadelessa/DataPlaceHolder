@@ -34,6 +34,8 @@ public class SimplePlaceHolder extends BasePlaceHolder {
     private boolean initShowDimMode;
     private int initProgress;
     private int initImageResId;
+    private int orgContainerWidth;
+    private int orgContainerHeight;
 
     //=================>
 
@@ -51,6 +53,8 @@ public class SimplePlaceHolder extends BasePlaceHolder {
 
     @Override
     protected void onAttachedToWindow() {
+        orgContainerWidth = container.getLayoutParams().width;
+        orgContainerHeight = container.getLayoutParams().height;
         super.onAttachedToWindow();
         if (initShowDimMode) {
             showDimProgress();
@@ -238,6 +242,9 @@ public class SimplePlaceHolder extends BasePlaceHolder {
             }
             //==> Dim Mode
             if (dimMode) {
+                if (getContainer() != null) {
+                    Utils.updateViewSize(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, getContainer());
+                }
                 if (getDataView() != null) {
                     getDataView().setVisibility(VISIBLE);
                 }
@@ -245,10 +252,12 @@ public class SimplePlaceHolder extends BasePlaceHolder {
                     getErrorView().setClickable(true);
                     getErrorView().setBackgroundColor(dimModeColor);
                     Utils.updateViewSize(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, getErrorView());
-                    Utils.updateViewSize(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, getContainer());
                     getErrorView().bringToFront();
                 }
             } else {
+                if (getContainer() != null && Utils.isValidSize(orgContainerWidth) && Utils.isValidSize(orgContainerHeight)) {
+                    Utils.updateViewSize(orgContainerWidth, orgContainerHeight, getContainer());
+                }
                 if (getDataView() != null) {
                     getDataView().setVisibility(GONE);
                 }
@@ -256,7 +265,6 @@ public class SimplePlaceHolder extends BasePlaceHolder {
                     getErrorView().setClickable(false);
                     getErrorView().setBackgroundColor(getColor(android.R.color.transparent));
                     Utils.updateViewSize(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, getErrorView());
-                    Utils.updateViewSize(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, getContainer());
                 }
             }
         }
@@ -362,5 +370,17 @@ public class SimplePlaceHolder extends BasePlaceHolder {
     }
 
     //=================>
+
+
+    @Override
+    public void dismissAll() {
+        if (getContainer() != null && Utils.isValidSize(orgContainerWidth) && Utils.isValidSize(orgContainerHeight)) {
+            Utils.updateViewSize(orgContainerWidth, orgContainerHeight, getContainer());
+        }
+        if (getErrorView() != null) {
+            Utils.updateViewSize(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, getErrorView());
+        }
+        super.dismissAll();
+    }
 
 }

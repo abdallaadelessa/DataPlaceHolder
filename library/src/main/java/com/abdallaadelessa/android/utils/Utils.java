@@ -47,4 +47,8 @@ public class Utils {
     public static void logError(Exception e) {
         Log.e(TAG_PLACE_HOLDER, "PlaceHolder Error", e);
     }
+
+    public static boolean isValidSize(int size) {
+        return size > 0 || size == ViewGroup.LayoutParams.MATCH_PARENT || size == ViewGroup.LayoutParams.WRAP_CONTENT;
+    }
 }

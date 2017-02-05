@@ -191,14 +191,10 @@ public abstract class BasePlaceHolder extends FrameLayout {
     //=================> Show and Hide
 
     public void dismissAll() {
-        if (getContainer() != null) {
-            Utils.updateViewSize(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, getContainer());
-        }
         if (getLoadView() != null) {
             getLoadView().setVisibility(GONE);
         }
         if (getErrorView() != null) {
-            Utils.updateViewSize(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, getErrorView());
             getErrorView().setVisibility(GONE);
         }
         if (getDataView() != null) {
