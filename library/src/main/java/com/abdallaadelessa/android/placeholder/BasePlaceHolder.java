@@ -87,7 +87,6 @@ public abstract class BasePlaceHolder extends FrameLayout {
             errorViewId = a.getResourceId(R.styleable.dataPlaceHolder_errorViewId, -1);
             dataViewId = a.getResourceId(R.styleable.dataPlaceHolder_dataViewId, -1);
             //===============>
-
             int loadViewLayoutId = a.getResourceId(R.styleable.dataPlaceHolder_loadLayoutId, -1);
             int errorViewLayoutId = a.getResourceId(R.styleable.dataPlaceHolder_errorLayoutId, -1);
             int dataViewLayoutId = a.getResourceId(R.styleable.dataPlaceHolder_dataLayoutId, -1);
@@ -163,10 +162,12 @@ public abstract class BasePlaceHolder extends FrameLayout {
         }
         if (view != null) {
             // Add
-            view.setId(id);
-            if (lastTag != null) view.setTag(lastTag);
-            view.setVisibility(lastVisibilityState);
-            getContainer().addView(view);
+            FrameLayout frameLayout = new FrameLayout(getContext());
+            frameLayout.setId(id);
+            frameLayout.addView(view);
+            if (lastTag != null) frameLayout.setTag(lastTag);
+            frameLayout.setVisibility(lastVisibilityState);
+            getContainer().addView(frameLayout);
         }
     }
 
